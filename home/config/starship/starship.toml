@@ -1,12 +1,15 @@
 # Get editor completions based on the config schema
 "$schema" = "https://starship.rs/config-schema.json"
+
 # Inserts a blank line between shell prompts
 add_newline = true
+
 # add higher timeout
 command_timeout = 1000
+
 # Change the default prompt format
 format = """\
-[](248) $all\
+$os $all\
 $fill\
 $time\
 $line_break\
@@ -23,24 +26,17 @@ symbol = " "
 [character]
 success_symbol = "[󰘧](bold green)"
 error_symbol = "[󰘧](bold red)"
+vimcmd_symbol = "[󰘧](bold blue)"
+vimcmd_visual_symbol = "[󰘧](bold yellow)"
+vimcmd_replace_symbol = "[󰘧](bold purple)"
+vimcmd_replace_one_symbol = "[󰘧](bold cyan)"
+
 
 # Shows the username
 [username]
 style_user = "white bold"
 style_root = "black bold"
 format = "[$user]($style) "
-disabled = false  # disable in powershell
-show_always = false
-
-[directory]
-home_symbol = "󰋜 ~"
-read_only_style = "197"
-read_only = "  "
-format = "at [$path]($style)[$read_only]($read_only_style) "
-
-[git_branch]
-symbol = " "
-format = "on [$symbol$branch]($style) "
 
 [kubernetes]
 format = 'on [ $context\($namespace\)](bold purple) '
@@ -56,8 +52,17 @@ symbol = "  "
 [buf]
 symbol = " "
 
+[bun]
+symbol = " "
+
 [c]
 symbol = " "
+
+[cpp]
+symbol = " "
+
+[cmake]
+symbol = " "
 
 [conda]
 symbol = " "
@@ -67,6 +72,15 @@ symbol = " "
 
 [dart]
 symbol = " "
+
+[deno]
+symbol = " "
+
+[directory]
+home_symbol = "󰋜 ~"
+read_only_style = "197"
+read_only = "  "
+format = "at [$path]($style)[$read_only]($read_only_style) "
 
 [docker_context]
 symbol = " "
@@ -82,6 +96,16 @@ symbol = " "
 
 [fossil_branch]
 symbol = " "
+
+[gcloud]
+symbol = "  "
+
+[git_branch]
+symbol = " "
+format = "on [$symbol$branch]($style) "
+
+[git_commit]
+tag_symbol = '  '
 
 [golang]
 symbol = " "
@@ -131,13 +155,19 @@ symbol = " "
 [ocaml]
 symbol = " "
 
+[os]
+style = "248"
+disabled = false
+
 [os.symbols]
 Alpaquita = " "
 Alpine = " "
+AlmaLinux = " "
 Amazon = " "
 Android = " "
 Arch = " "
 Artix = " "
+CachyOS = " "
 CentOS = " "
 Debian = " "
 DragonFly = " "
@@ -149,6 +179,7 @@ Garuda = "󰛓 "
 Gentoo = " "
 HardenedBSD = "󰞌 "
 Illumos = "󰈸 "
+Kali = " "
 Linux = " "
 Mabox = " "
 Macos = " "
@@ -158,6 +189,7 @@ MidnightBSD = " "
 Mint = " "
 NetBSD = " "
 NixOS = " "
+Nobara = " "
 OpenBSD = "󰈺 "
 openSUSE = " "
 OracleLinux = "󰌷 "
@@ -165,11 +197,13 @@ Pop = " "
 Raspbian = " "
 Redhat = " "
 RedHatEnterprise = " "
+RockyLinux = " "
 Redox = "󰀘 "
 Solus = "󰠳 "
 SUSE = " "
 Ubuntu = " "
 Unknown = " "
+Void = " "
 Windows = "󰍲 "
 
 [package]
@@ -183,6 +217,9 @@ symbol = " "
 
 [pijul_channel]
 symbol = " "
+
+[pixi]
+symbol = "󰏗 "
 
 [python]
 symbol = " "
@@ -204,3 +241,6 @@ symbol = " "
 
 [zig]
 symbol = " "
+
+[gradle]
+symbol = " "
