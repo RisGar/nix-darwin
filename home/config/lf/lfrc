@@ -8,9 +8,8 @@ set drawbox
 set hidden true
 set icons
 set ignorecase true
-set sixel true
 
-map i $ mlpreview $f | $PAGER # don't use home-manager to use custom $PAGER
+# map i $ mlpreview $f | $PAGER # -> home-manager
 # set dirpreviews true
 
 # layout
@@ -57,9 +56,6 @@ cmd mkfile %{{
   read ans
   mkdir -p "$(dirname "$ans")" && touch "$ans" && lf -remote "send $id select $ans"
 }}
-
-# trash
-cmd trash %trash -F $fx
 
 # zoxide
 cmd z %{{
@@ -122,34 +118,12 @@ cmd open %{{
   esac
 }}
 
-# copy path
-cmd copy-path $printf '%s' "$fx" | pbcopy
-
-# quit
-cmd q quit
-
-# chmod
-cmd make-exec %chmod 755 $f && lf -remote "send $id reload"
-cmd make-normal %chmod 644 $f && lf -remote "send $id reload"
-
-
-# bind overrides
-map d
-
 # binds
 map <enter> open
-map R reload
 
-map r rename
-map <c-d> trash
-map D delete
 map af mkfile
 map ad mkdir
 
-map x cut
-map y copy
-map Y copy-path
-map p paste
 map P symlink
 
 map f fd_fzf
@@ -157,26 +131,9 @@ map <c-f> rg_fzf
 
 map zp toggle-preview
 
-map <c-e> make-exec
-map <c-n> make-normal
-
 map <space> &qlmanage -p "$f" 2>/dev/null 1>/dev/null
 
-# locations
-map gh cd ~
-map gc cd ~/.config
-
-map gD cd ~/Downloads
-
-map gd cd ~/Documents
-map gp cd ~/Documents/Programming
-map gb cd ~/Documents/Binaries
-
-map gP cd ~/Pictures
-map gm cd ~/Movies
-map gM cd ~/Music
-
-map gL follow-link
+map gx follow-link
 
 # start commands
 recol

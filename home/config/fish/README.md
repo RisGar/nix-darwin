@@ -8,10 +8,6 @@ tangle: /private/etc/nix-darwin/home/config/fish/config.fish
 - Plugins are added via `fish_plugins`
 - The other files and directories are managed by fish itself, fisher, Homebrew, ...
 
-## Sources
-
-- [DistroTube's fish config](https://gitlab.com/dwt1/dotfiles/-/blob/master/.config/fish/config.fish)
-
 ## Dependencies
 
 - [fish-shell/fish-shell](https://github.com/fish-shell/fish-shell)
@@ -44,7 +40,6 @@ set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH
 set -gx PNPM_HOME "$XDG_DATA_HOME/pnpm"
 
 set -gx PAGER "ov"
-set -gx GIT_PAGER "delta"
 
 set -gx CC "$HOMEBREW_PREFIX/opt/llvm/bin/clang"
 set -gx CXX "$HOMEBREW_PREFIX/opt/llvm/bin/clang++"
@@ -70,6 +65,8 @@ set -gx EZA_CONFIG_DIR "$XDG_CONFIG_HOME/eza"
 set -gx UNISON "$XDG_DATA_HOME"/unison
 set -gx JULIA_DEPOT_PATH "$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
 set -gx DOCKER_CONFIG "$XDG_CONFIG_HOME/docker"
+
+set -gx MACOSX_DEPLOYMENT_TARGET 15
 ```
 
 ## Path
@@ -79,7 +76,7 @@ fish_add_path $($HOMEBREW_PREFIX/bin/brew --prefix rustup)/bin "$HOMEBREW_PREFIX
 $($HOMEBREW_PREFIX/bin/brew --prefix python)/libexec/bin "$GOPATH/bin" "$XDG_BIN_HOME" "$CARGO_HOME/bin" \
 "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" "$HOMEBREW_PREFIX/bin" "$HOMEBREW_PREFIX/sbin" \
 "$CABAL_DIR/bin" "$PNPM_HOME" "$GEM_HOME/bin" "$XDG_DATA_HOME/bob/nvim-bin" \
-"$HOME/Library/Application Support/Coursier/bin" "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" \
+"$HOME/Library/Application Support/JetBrains/Toolbox/scripts" \
 "$HOMEBREW_PREFIX/opt/ruby/bin" "/Library/TeX/texbin"
 
 set -gx MANPATH "/opt/homebrew/opt/libarchive/share/man" $MANPATH
@@ -103,11 +100,6 @@ eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
 Aliases and abbreviations to shorten or modify often-used commands.
 
 ```fish
-
-alias cp "cp -i"
-alias mv 'mv -i'
-alias rm 'rm -i'
-
 alias trash="trash -F"
 alias spotify-dlp="yt-dlp --config-locations ~/.config/yt-dlp/config-spotify"
 alias iamb="iamb -C $XDG_CONFIG_HOME"
@@ -133,6 +125,7 @@ function reload
 
     gltangle /etc/nix-darwin/home/config/fish/README.md
     sudo -i darwin-rebuild switch -I /etc/nix-darwin/flake.nix
+    source ~/.config/fish/config.fish
 end
 ```
 
@@ -152,10 +145,9 @@ set -gx MANPAGER "nvim +Man!"
 ### bat
 
 - [sharkdp/bat](https://github.com/sharkdp/bat): `cat` replacement
+- Installed via nix home-manager
 
 ```fish
-set -gx BAT_THEME "OneHalfDark"
-
 set -gx HOMEBREW_BAT true
 
 # work with fd
@@ -163,19 +155,13 @@ function fd
     command fd $argv -X bat
 end
 
-# work with ov pager
-set -gx BAT_PAGER "ov -F -H3"
-alias bat "bat --wrap=never"
+# alias bat "bat --wrap=never"
 ```
 
 ### zoxide
 
 - [ajeetdsouza/zoxide](https://github.com/ajeetdsouza/zoxide): `cd` replacement
-
-```fish
-alias cd "z"
-alias .. 'z ..'
-```
+- Installed via nix home-manager
 
 ### eza
 
@@ -221,19 +207,18 @@ gpgconf --launch gpg-agent
 
 ### oil.nvim
 
+- Adapted from [this gist](https://gist.github.com/jsongerber/7dfd9f2d22ae060b98e15c5590c4828d)
+
 ```fish
 function oil
-    # Select a host via fzf from ~/.ssh/config
-    set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | fzf)
+    set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | gum filter --limit 1 --no-sort --fuzzy --placeholder 'Pick an ssh host' --prompt="󰣀 ")
 
     if test -z "$host"
         return 0
     end
 
-    # Get user from host name
     set user (ssh -G "$host" | grep '^user\>' | sed 's/^user //')
 
-    # Open Neovim with oil-ssh URI
     nvim oil-ssh://$user@$host/
 end
 ```
@@ -245,15 +230,6 @@ if status is-interactive
 and not set -q TMUX
     # exec tmux new -As0
 end
-```
-
-### Mise
-
-- [jdx/mise](https://github.com/jdx/mise)
-
-```fish
-mise activate fish | source
-
 ```
 
 ## Keybindings
@@ -296,8 +272,6 @@ end
 - [starship/starship](https://github.com/starship/starship): custom prompt ([see my config](../starship/README.md))
 
 ```fish
-set -gx STARSHIP_CONFIG "$XDG_CONFIG_HOME/starship/starship.toml"
-
 function starship_transient_prompt_func
   starship module character
 end
@@ -305,7 +279,4 @@ end
 function starship_transient_rprompt_func
   starship module time
 end
-
-starship init fish | source
-enable_transience
 ```

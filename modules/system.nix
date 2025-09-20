@@ -1,8 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, flake-self, ... }:
 {
+  # Set Git commit hash for darwin-version.
+  system.configurationRevision = flake-self.rev or flake-self.dirtyRev or null;
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
+  nix.channel.enable = false;
 
   # User setup
   system.primaryUser = "rishab";
@@ -15,9 +18,6 @@
   ];
   users.users."rishab".shell = pkgs.fish;
 
-  # Direnv
-  programs.direnv.enable = true;
-
   # Use Touch ID or Apple Watch for sudo auth
   security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -25,9 +25,9 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 6;
 
-  system.defaults = {
-    menuExtraClock.Show24Hour = true;
+  system.startup.chime = true;
 
+  system.defaults = {
     dock = {
       autohide = true;
       autohide-delay = 0.0;
@@ -40,6 +40,34 @@
       wvous-tl-corner = 10; # Put display to sleep
       wvous-tr-corner = 13; # Lock Screen
     };
+
+    hitoolbox.AppleFnUsageType = "Show Emoji & Symbols";
+
+    finder = {
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true;
+      FXEnableExtensionChangeWarning = false;
+      FXRemoveOldTrashItems = false;
+      NewWindowTarget = "Documents";
+      ShowHardDrivesOnDesktop = false;
+      ShowExternalHardDrivesOnDesktop = false;
+      ShowRemovableMediaOnDesktop = false;
+      ShowMountedServersOnDesktop = false;
+      ShowPathbar = true;
+      ShowStatusBar = false;
+    };
+
+    SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
+
+    menuExtraClock = {
+      FlashDateSeparators = false;
+      IsAnalog = false;
+      Show24Hour = true;
+      ShowDate = 0; # When space allows
+      ShowDayOfMonth = true;
+      ShowDayOfWeek = true;
+      ShowSeconds = false;
+    };
   };
 
   # The platform the configuration will be used on.
@@ -47,7 +75,6 @@
 
   time.timeZone = "Europe/Berlin";
 
-  # Nix store optimization
   nix.optimise.automatic = true;
-
+  nix.gc.automatic = true;
 }
