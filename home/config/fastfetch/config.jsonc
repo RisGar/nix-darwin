@@ -22,7 +22,7 @@
       "type": "packages",
       "key": "󰏓 PKGS",
       "keyColor": "yellow",
-      "format": "nix: {9} system, {10} user, {11} default + brew: {17} formulae, {18} casks"
+      "format": "nix: {43} – {9}/{10}/{11} + brew: {45} – {17}/{18}"
     },
     {
       "type": "shell",
@@ -35,10 +35,10 @@
       "keyColor": "green"
     },
     {
-      "type": "terminalfont",
-      "key": " FONT",
+      "type": "display",
+      "key": "󰍹  RES",
       "keyColor": "blue",
-      "format": "{2}"
+      "format": "{}x{} {}Hz"
     },
     {
       "type": "cpu",
