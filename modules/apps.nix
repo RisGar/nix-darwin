@@ -123,7 +123,6 @@
       "homebrew/services"
       "homebrew/test-bot"
       # "jeffreywildman/virt-manager"
-      "jesseduffield/lazygit"
       "nikitabobko/tap" # aerospace
       "nikolaeu/numi" # numi cli
       "noborus/tap" # ov
@@ -176,7 +175,6 @@
       "juliaup"
       "jupyterlab"
       "just"
-      "lazygit"
       "libadwaita"
       "libffi"
       "libvterm"

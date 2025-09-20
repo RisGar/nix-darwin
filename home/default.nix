@@ -23,6 +23,8 @@
 
   nix.gc.automatic = true;
 
+  xdg.enable = true;
+
   home.packages = [
     mlpreview.packages.${pkgs.system}.default
     pkgs.delta # dependency of git config
@@ -289,6 +291,12 @@
         };
       };
     };
+  };
+
+  xdg.configFile."lazygit/config.yml".src = ./config/lazygit/config.yml;
+  programs.lazygit = {
+    enable = true;
+    # don't use settings as nix cannot natively read yaml files
   };
 
 }
