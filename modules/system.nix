@@ -70,11 +70,11 @@
     };
   };
 
-  # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   time.timeZone = "Europe/Berlin";
 
   nix.optimise.automatic = true;
   nix.gc.automatic = true;
+
 }

@@ -7,16 +7,15 @@
   environment.systemPackages = with pkgs; [
     # bitwarden-cli # TODO: wait until https://github.com/NixOS/nixpkgs/issues/339576 is fixed
     # doomrunner # TODO: broken
-    # isabelle # TODO: slowwww
-    # opam: TODO:
-    # spotify # TODO: wait until not broken
+    isabelle # TODO: slowwww
+    # opam  TODO:
+    spotify # TODO: wait until not broken
     # zulip-term # TODO: broken
     aria2
-    autoconf
     bat
     beam.interpreters.erlang_28 # for gleescript
     bear
-    discord
+    vesktop
     evil-helix
     exercism
     eza # TODO: home manager
@@ -54,11 +53,10 @@
     zotero
     babelfish
     iina
-  ];
+    pngpaste # For img-clip.nvim
+    terminal-notifier
+    airdrop-cli
 
-  fonts.packages = with pkgs; [
-    maple-mono.NF
-    maple-mono.NF-CN
   ];
 
   homebrew = {
@@ -112,24 +110,12 @@
     };
 
     taps = [
-      "charmbracelet/tap"
-      "clojure/tools"
-      "coursier/formulas" # scala
       "homebrew-zathura/zathura"
-      "homebrew/bundle"
-      "homebrew/cask"
-      "homebrew/command-not-found"
-      "homebrew/core"
-      "homebrew/services"
       "homebrew/test-bot"
-      # "jeffreywildman/virt-manager"
       "nikitabobko/tap" # aerospace
       "nikolaeu/numi" # numi cli
       "noborus/tap" # ov
-      "risgar/tap"
       "sikarugir-app/sikarugir"
-      "unisonweb/unison"
-      "vldmrkl/formulae" # airdrop-cli
     ];
 
     # `brew install`
@@ -146,9 +132,6 @@
       "libgit2"
       "node"
       "bob"
-      "brew-cask-completion"
-      "ccache"
-      "cmake"
       "colima"
       "unixodbc"
       "llvm"
@@ -163,11 +146,9 @@
       # "openjpeg"
       # "leptonica" # what is this used for?
       # "libraw"
-      "gcc"
       "gh"
-      "gnu-sed"
-      "pinentry"
-      "gnupg"
+      # "pinentry"
+      # "gnupg"
       "go"
       # "gstreamer"
       "iamb"
@@ -184,31 +165,20 @@
       "luajit"
       "luarocks"
       "mas"
-      "mesa"
-      "ninja"
-      "openjdk@17"
-      "openjdk@21"
       "p7zip"
       # "parallel"
-      "pngpaste" # For img-clip.nvim
-      "poppler"
       "presenterm"
       "python@3.11"
       "ripgrep"
       "ruby"
       "rustup"
-      # "tree-sitter"
-      "terminal-notifier"
-      "tmux"
+      "tmux" # TODO: home manager
       {
         name = "trash";
         link = true;
       }
-      "tree"
-      "trunk"
       "uutils-coreutils"
       # "watch"
-      # "weasyprint" # what is this used for?
       "websocat"
       "xh"
       "yadm"
@@ -222,11 +192,6 @@
       "homebrew-zathura/zathura/zathura-ps"
       "nikolaeu/numi/numi-cli"
       "noborus/tap/ov"
-      "unisonweb/unison/unison-language"
-      {
-        name = "vldmrkl/formulae/airdrop-cli";
-        args = [ "HEAD" ];
-      }
     ];
 
     casks = [
@@ -244,7 +209,6 @@
       "qlmarkdown"
       "qlvideo"
       "sikarugir-app/sikarugir/sikarugir"
-      "spotify"
       "steam"
       "transmission-remote-gui"
       "ungoogled-chromium"
@@ -253,8 +217,8 @@
       # "xquartz"
     ];
 
-    extraConfig = ''
-      brew "mupdf", args: ["as-dependency"], postinstall: "brew reinstall zathura-pdf-mupdf"
-    '';
+    # extraConfig = ''
+    #   brew "mupdf", args: ["as-dependency"], postinstall: "brew reinstall zathura-pdf-mupdf"
+    # '';
   };
 }

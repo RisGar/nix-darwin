@@ -1,6 +1,7 @@
 {
   pkgs,
   mlpreview,
+  config,
   ...
 }:
 {
@@ -25,10 +26,20 @@
 
   xdg.enable = true;
 
-  home.packages = [
-    mlpreview.packages.${pkgs.system}.default
-    pkgs.delta # dependency of git config
-  ];
+  home.packages =
+    with pkgs;
+    [
+      unison-ucm
+      mlpreview
+      delta # dependency of git config
+    ]
+    ++ [
+      # Fonts
+      maple-mono.NF
+      maple-mono.NF-CN
+    ];
+
+  fonts.fontconfig.enable = true;
 
   home.shellAliases = {
     cp = "cp -i";
@@ -38,7 +49,32 @@
     cd = "z";
     ".." = "z ..";
 
-    nixrepl = "nix repl --expr '{inherit (import <nixpkgss> {}) pkgs lib;}'";
+    nixrepl = "nix repl --expr '{inherit (import <nixpkgs> {}) pkgs lib;}'";
+  };
+
+  home.sessionVariables = {
+    LANG = "en_GB.UTF-8";
+
+    # Use neovim as default editor and manpage
+    # Use neovim as default editor and manpagerr
+    EDITOR = "nvim -e";
+    VISUAL = "nvim";
+    MANPAGER = "nvim +Man!";
+
+    PAGER = "ov";
+
+    MACOSX_DEPLOYMENT_TARGET = 15;
+
+    # Homebrew config
+    HOMEBREW_PREFIX = "/opt/homebrew";
+    HOMEBREW_CELLAR = "$HOMEBREW_PREFIX/Cellar";
+    HOMEBREW_REPOSITORY = "$HOMEBREW_PREFIX";
+    HOMEBREW_BAT = "1";
+  };
+
+  home.sessionSearchVariables = {
+    MANPATH = [ "$HOMEBREW_PREFIX/opt/libarchive/share/man" ];
+    INFOPATH = [ "$HOMEBREW_PREFIX/share/info" ];
   };
 
   xdg.configFile."fish/themes/One Dark.theme".source = ./config/fish/one_dark.theme;
@@ -57,10 +93,6 @@
       {
         name = "puffer-fish"; # Expand consecutive dots
         src = pkgs.fishPlugins.puffer.src;
-      }
-      {
-        name = "sponge"; # Clean failed commands from history
-        src = pkgs.fishPlugins.sponge.src;
       }
       {
         name = "fish-abbreviation-tips";
@@ -175,9 +207,10 @@
     settings = builtins.fromTOML (builtins.readFile ./config/starship/starship.toml);
   };
 
+  xdg.configFile."lf/icons".source = ./config/lf/icons;
   programs.lf = {
     enable = true;
-    previewer.source = mlpreview.packages.${pkgs.system}.default + /bin/mlpreview;
+    previewer.source = "${pkgs.mlpreview}/bin/mlpreview";
     previewer.keybinding = "i"; # TODO: override less with pager in overlay
     extraConfig = builtins.readFile ./config/lf/lfrc;
     cmdKeybindings = {
@@ -293,10 +326,20 @@
     };
   };
 
-  xdg.configFile."lazygit/config.yml".src = ./config/lazygit/config.yml;
+  programs.gpg = {
+    enable = true;
+    homedir = "${config.xdg.dataHome}/gnupg";
+  };
+
+  xdg.configFile."lazygit/config.yml".source = ./config/lazygit/config.yml;
   programs.lazygit = {
     enable = true;
     # don't use settings as nix cannot natively read yaml files
+  };
+
+  programs.java = {
+    enable = true;
+    package = pkgs.jdk17;
   };
 
 }
