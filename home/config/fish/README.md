@@ -20,26 +20,12 @@ Uses the [XDG Base Directory Specification](https://specifications.freedesktop.o
 
 ```fish
 set -gx XDG_BIN_HOME "$HOME/.local/bin"
-set -gx XDG_CACHE_HOME "$HOME/.cache"
-set -gx XDG_CONFIG_HOME "$HOME/.config"
-set -gx XDG_DATA_HOME "$HOME/.local/share"
-set -gx XDG_STATE_HOME "$HOME/.local/state"
 ```
 
 ## Variables
 
 ```fish
-set -gx LC_ALL "en_GB.UTF-8"
-
-set -gx HOMEBREW_PREFIX "/opt/homebrew"
-set -gx HOMEBREW_CELLAR "$HOMEBREW_PREFIX/Cellar"
-set -gx HOMEBREW_REPOSITORY "$HOMEBREW_PREFIX"
-set -gx MANPATH '' $MANPATH
-set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH
-
 set -gx PNPM_HOME "$XDG_DATA_HOME/pnpm"
-
-set -gx PAGER "ov"
 
 set -gx CC "$HOMEBREW_PREFIX/opt/llvm/bin/clang"
 set -gx CXX "$HOMEBREW_PREFIX/opt/llvm/bin/clang++"
@@ -65,8 +51,6 @@ set -gx EZA_CONFIG_DIR "$XDG_CONFIG_HOME/eza"
 set -gx UNISON "$XDG_DATA_HOME"/unison
 set -gx JULIA_DEPOT_PATH "$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
 set -gx DOCKER_CONFIG "$XDG_CONFIG_HOME/docker"
-
-set -gx MACOSX_DEPLOYMENT_TARGET 15
 ```
 
 ## Path
@@ -78,8 +62,6 @@ $($HOMEBREW_PREFIX/bin/brew --prefix python)/libexec/bin "$GOPATH/bin" "$XDG_BIN
 "$CABAL_DIR/bin" "$PNPM_HOME" "$GEM_HOME/bin" "$XDG_DATA_HOME/bob/nvim-bin" \
 "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" \
 "$HOMEBREW_PREFIX/opt/ruby/bin" "/Library/TeX/texbin"
-
-set -gx MANPATH "/opt/homebrew/opt/libarchive/share/man" $MANPATH
 
 set -p fish_complete_path "$HOMEBREW_PREFIX/share/fish/vendor_completions.d" "$HOMEBREW_PREFIX/share/fish/completions"
 set -p __fish_vendor_confdirs "$HOMEBREW_PREFIX/share/fish/vendor_conf.d"
@@ -131,24 +113,12 @@ end
 
 ## Software
 
-### neovim
-
-- [neovim/neovim](https://github.com/neovim/neovim): [see my config](../nvim/README.md)
-- Use neovim as default editor and manpager
-
-```fish
-set -gx EDITOR nvim -e
-set -gx VISUAL nvim
-set -gx MANPAGER "nvim +Man!"
-```
-
 ### bat
 
 - [sharkdp/bat](https://github.com/sharkdp/bat): `cat` replacement
 - Installed via nix home-manager
 
 ```fish
-set -gx HOMEBREW_BAT true
 
 # work with fd
 function fd
@@ -200,9 +170,9 @@ end
 ### gnupg
 
 ```fish
-set -gx GPG_TTY (tty)
-
-gpgconf --launch gpg-agent
+# set -gx GPG_TTY (tty)
+#
+# gpgconf --launch gpg-agent
 ```
 
 ### oil.nvim

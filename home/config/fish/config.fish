@@ -1,19 +1,5 @@
 set -gx XDG_BIN_HOME "$HOME/.local/bin"
-set -gx XDG_CACHE_HOME "$HOME/.cache"
-set -gx XDG_CONFIG_HOME "$HOME/.config"
-set -gx XDG_DATA_HOME "$HOME/.local/share"
-set -gx XDG_STATE_HOME "$HOME/.local/state"
-set -gx LC_ALL "en_GB.UTF-8"
-
-set -gx HOMEBREW_PREFIX "/opt/homebrew"
-set -gx HOMEBREW_CELLAR "$HOMEBREW_PREFIX/Cellar"
-set -gx HOMEBREW_REPOSITORY "$HOMEBREW_PREFIX"
-set -gx MANPATH '' $MANPATH
-set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH
-
 set -gx PNPM_HOME "$XDG_DATA_HOME/pnpm"
-
-set -gx PAGER "ov"
 
 set -gx CC "$HOMEBREW_PREFIX/opt/llvm/bin/clang"
 set -gx CXX "$HOMEBREW_PREFIX/opt/llvm/bin/clang++"
@@ -39,16 +25,12 @@ set -gx EZA_CONFIG_DIR "$XDG_CONFIG_HOME/eza"
 set -gx UNISON "$XDG_DATA_HOME"/unison
 set -gx JULIA_DEPOT_PATH "$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"
 set -gx DOCKER_CONFIG "$XDG_CONFIG_HOME/docker"
-
-set -gx MACOSX_DEPLOYMENT_TARGET 15
 fish_add_path $($HOMEBREW_PREFIX/bin/brew --prefix rustup)/bin "$HOMEBREW_PREFIX/opt/llvm/bin" \
 $($HOMEBREW_PREFIX/bin/brew --prefix python)/libexec/bin "$GOPATH/bin" "$XDG_BIN_HOME" "$CARGO_HOME/bin" \
 "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" "$HOMEBREW_PREFIX/bin" "$HOMEBREW_PREFIX/sbin" \
 "$CABAL_DIR/bin" "$PNPM_HOME" "$GEM_HOME/bin" "$XDG_DATA_HOME/bob/nvim-bin" \
 "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" \
 "$HOMEBREW_PREFIX/opt/ruby/bin" "/Library/TeX/texbin"
-
-set -gx MANPATH "/opt/homebrew/opt/libarchive/share/man" $MANPATH
 
 set -p fish_complete_path "$HOMEBREW_PREFIX/share/fish/vendor_completions.d" "$HOMEBREW_PREFIX/share/fish/completions"
 set -p __fish_vendor_confdirs "$HOMEBREW_PREFIX/share/fish/vendor_conf.d"
@@ -75,10 +57,6 @@ function reload
     sudo -i darwin-rebuild switch -I /etc/nix-darwin/flake.nix
     source ~/.config/fish/config.fish
 end
-set -gx EDITOR nvim -e
-set -gx VISUAL nvim
-set -gx MANPAGER "nvim +Man!"
-set -gx HOMEBREW_BAT true
 
 # work with fd
 function fd
@@ -99,9 +77,9 @@ function lf --wraps="lf" --description="lf - Terminal file manager (changing dir
     # Quotes will cause `cd` to not change directory if `lf` prints nothing to stdout due to an error.
     cd "$(command lf -print-last-dir $argv)"
 end
-set -gx GPG_TTY (tty)
-
-gpgconf --launch gpg-agent
+# set -gx GPG_TTY (tty)
+#
+# gpgconf --launch gpg-agent
 function oil
     set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | gum filter --limit 1 --no-sort --fuzzy --placeholder 'Pick an ssh host' --prompt="󰣀 ")
 
