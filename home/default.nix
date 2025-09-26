@@ -1,6 +1,5 @@
 {
   pkgs,
-  mlpreview,
   config,
   ...
 }:
@@ -24,87 +23,21 @@
 
   nix.gc.automatic = true;
 
-  xdg.enable = true;
-
-  home.packages =
-    with pkgs;
-    [
-      unison-ucm
-      mlpreview
-      delta # dependency of git config
-    ]
-    ++ [
-      # Fonts
-      maple-mono.NF
-      maple-mono.NF-CN
-    ];
+  home.packages = with pkgs; [
+    unison-ucm
+    mlpreview
+    delta # dependency of git config
+    maple-mono.NF
+    maple-mono.NF-CN
+  ];
 
   fonts.fontconfig.enable = true;
 
-  home.shellAliases = {
-    cp = "cp -i";
-    mv = "mv -i";
-    rm = "rm -i";
-
-    cd = "z";
-    ".." = "z ..";
-
-    nixrepl = "nix repl --expr '{inherit (import <nixpkgs> {}) pkgs lib;}'";
-  };
-
-  home.sessionVariables = {
-    LANG = "en_GB.UTF-8";
-
-    # Use neovim as default editor and manpage
-    # Use neovim as default editor and manpagerr
-    EDITOR = "nvim -e";
-    VISUAL = "nvim";
-    MANPAGER = "nvim +Man!";
-
-    PAGER = "ov";
-
-    MACOSX_DEPLOYMENT_TARGET = 15;
-
-    # Homebrew config
-    HOMEBREW_PREFIX = "/opt/homebrew";
-    HOMEBREW_CELLAR = "$HOMEBREW_PREFIX/Cellar";
-    HOMEBREW_REPOSITORY = "$HOMEBREW_PREFIX";
-    HOMEBREW_BAT = "1";
-  };
-
-  home.sessionSearchVariables = {
-    MANPATH = [ "$HOMEBREW_PREFIX/opt/libarchive/share/man" ];
-    INFOPATH = [ "$HOMEBREW_PREFIX/share/info" ];
-  };
-
-  xdg.configFile."fish/themes/One Dark.theme".source = ./config/fish/one_dark.theme;
-  programs.fish = {
-    enable = true;
-    shellInit = builtins.readFile ./config/fish/config.fish;
-    plugins = [
-      {
-        name = "fzf.fish";
-        src = pkgs.fishPlugins.fzf-fish.src;
-      }
-      {
-        name = "autopair.fish";
-        src = pkgs.fishPlugins.autopair-fish.src;
-      }
-      {
-        name = "puffer-fish"; # Expand consecutive dots
-        src = pkgs.fishPlugins.puffer.src;
-      }
-      {
-        name = "fish-abbreviation-tips";
-        src = pkgs.fetchFromGitHub {
-          owner = "gazorby";
-          repo = "fish-abbreviation-tips";
-          rev = "v0.7.0";
-          hash = "sha256-F1t81VliD+v6WEWqj1c1ehFBXzqLyumx5vV46s/FZRU=";
-        };
-      }
-    ];
-  };
+  imports = [
+    ./config/git
+    ./config/lf
+    ./config/fish
+  ];
 
   programs.btop = {
     enable = true;
@@ -207,36 +140,6 @@
     settings = builtins.fromTOML (builtins.readFile ./config/starship/starship.toml);
   };
 
-  xdg.configFile."lf/icons".source = ./config/lf/icons;
-  programs.lf = {
-    enable = true;
-    previewer.source = "${pkgs.mlpreview}/bin/mlpreview";
-    previewer.keybinding = "i"; # TODO: override less with pager in overlay
-    extraConfig = builtins.readFile ./config/lf/lfrc;
-    cmdKeybindings = {
-      r = "rename";
-      D = "delete";
-      x = "cut";
-      y = "copy";
-      d = "";
-      R = "reload";
-      p = "paste";
-    };
-    commands = {
-      trash = "%trash -F $fx";
-      copy-path = "$printf '%s' \"$fx\" | pbcopy";
-      q = "quit";
-      make-exec = "%chmod 755 $f && lf -remote \"send $id reload\"";
-      make-normal = "%chmod 644 $f && lf -remote \"send $id reload\"";
-    };
-    keybindings = {
-      "<c-d>" = "trash";
-      Y = "copy-path";
-      "<c-e>" = "make-exec";
-      "<c-n>" = "make-normal";
-    };
-  };
-
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
@@ -247,81 +150,6 @@
     globalConfig = {
       tools = {
         node = "lts";
-      };
-    };
-  };
-
-  programs.git = {
-    enable = true;
-
-    userName = "Rishab Garg";
-    userEmail = "me@rishab-garg.me";
-
-    signing = {
-      key = "7EC2233FD90AF4F1";
-      signByDefault = true;
-      format = "openpgp";
-    };
-
-    lfs.enable = true;
-
-    extraConfig = {
-      core = {
-        editor = "nvim";
-        pager = "${pkgs.delta}/bin/delta --pager='ov -F'";
-      };
-
-      interactive = {
-        diffFilter = "${pkgs.delta}/bin/delta --color-only";
-      };
-
-      pager = {
-        show = "${pkgs.delta}/bin/delta --pager='ov -F --header 3'";
-        diff = "${pkgs.delta}/bin/delta --features ov-diff";
-        log = "${pkgs.delta}/bin/delta --features ov-log";
-      };
-
-      delta = {
-        navigate = true;
-        dark = true;
-        "ov-diff" = {
-          pager = "ov -F --section-delimiter '^(commit|added:|removed:|renamed:|Δ)' --section-header --pattern '•'";
-        };
-        "ov-log" = {
-          pager = "ov -F --section-delimiter '^commit' --section-header-num 3";
-        };
-      };
-
-      merge = {
-        conflictstyle = "zdiff3";
-      };
-
-      filter.lfs = {
-        clean = "git-lfs clean -- %f";
-        smudge = "git-lfs smudge -- %f";
-        process = "git-lfs filter-process";
-        required = true;
-      };
-
-      pull = {
-        rebase = false;
-      };
-
-      init = {
-        defaultBranch = "master";
-      };
-
-      credential = {
-        helper = "/usr/local/share/gcm-core/git-credential-manager";
-        "https://artemis.cit.tum.de" = {
-          provider = "generic";
-        };
-        "https://artemis.tum.de" = {
-          provider = "generic";
-        };
-        "https://git.fs.tum.de" = {
-          provider = "generic";
-        };
       };
     };
   };
@@ -342,4 +170,38 @@
     package = pkgs.jdk17;
   };
 
+  programs.zathura = {
+    enable = true;
+    mappings = {
+      "r" = "reload";
+      "R" = "rotate";
+      "p" = "print";
+      "i" = "recolor";
+      "f" = "toggle_fullscreen";
+      "[fullscreen]f" = "toggle_fullscreen";
+    };
+    extraConfig = builtins.readFile ./config/zathura/zathurarc;
+    package = pkgs.zathura.override {
+      useMupdf = true;
+    };
+  };
+
+  programs.ripgrep = {
+    enable = true;
+  };
+
+  programs.jq = {
+    enable = true;
+  };
+
+  programs.eza = {
+    enable = true;
+    colors = "always";
+    icons = "always";
+    git = true;
+    extraOptions = [
+      "--classify=always"
+      "--group-directories-first"
+    ];
+  };
 }

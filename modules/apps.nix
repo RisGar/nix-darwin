@@ -5,57 +5,60 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
+    josm
     # bitwarden-cli # TODO: wait until https://github.com/NixOS/nixpkgs/issues/339576 is fixed
     # doomrunner # TODO: broken
-    isabelle # TODO: slowwww
     # opam  TODO:
-    spotify # TODO: wait until not broken
     # zulip-term # TODO: broken
+    (callPackage ./doomrunner.nix { }) # TODO: wait until pr is on unstable
+    airdrop-cli
     aria2
-    bat
+    babelfish
     beam.interpreters.erlang_28 # for gleescript
     bear
-    vesktop
-    evil-helix
     exercism
-    eza # TODO: home manager
     ffmpeg
     grandperspective
     gum
     hyperfine
+    iina
     imagemagick
+    isabelle # TODO: slowwww
     keepassxc
+    mas
     moonlight-qt
     mosh
     nixd
     nixfmt
     numi
     obsidian
+    ov
     pcre2
     pkg-config
     pkgconf
+    pngpaste # For img-clip.nvim
+    presenterm
     prismlauncher
     raycast
     semgrep
     shottr
+    spotify # TODO: wait until not broken
     suspicious-package
+    terminal-notifier
     tlrc # tldr rust client
     tokei
     transmission_4
     tree-sitter # for nvim-treesitter
     typst # TODO: devshell?
+    vesktop
     virt-viewer
     vscode # TODO: home manager
     wakatime-cli
     wget # for mason
     xdg-ninja
+    xh
     xz
     zotero
-    babelfish
-    iina
-    pngpaste # For img-clip.nvim
-    terminal-notifier
-    airdrop-cli
 
   ];
 
@@ -63,9 +66,7 @@
     enable = true;
 
     onActivation = {
-      autoUpdate = true;
       cleanup = "zap";
-      upgrade = true;
     };
 
     masApps = {
@@ -114,7 +115,6 @@
       "homebrew/test-bot"
       "nikitabobko/tap" # aerospace
       "nikolaeu/numi" # numi cli
-      "noborus/tap" # ov
       "sikarugir-app/sikarugir"
     ];
 
@@ -122,86 +122,46 @@
     # TODO: migrate to nix
     brews = [
       "bitwarden-cli"
-      "glib"
-      "libx11"
+      # "libx11"
       "aichat"
-      "little-cms2"
-      "jpeg-xl"
-      "aom"
-      "openssl@3"
-      "libgit2"
-      "node"
+      # "openssl@3"
       "bob"
       "colima"
-      "unixodbc"
       "llvm"
       "docker" # TODO:
       "docker-buildx"
       "docker-compose"
       "docker-credential-helper"
       "dsda-doom"
-      "wxwidgets"
-      # "exiftool"
-      # "unbound"
-      # "openjpeg"
-      # "leptonica" # what is this used for?
-      # "libraw"
       "gh"
       # "pinentry"
       # "gnupg"
       "go"
       # "gstreamer"
-      "iamb"
-      "jq"
       "juliaup"
       "jupyterlab"
-      "just"
-      "libadwaita"
-      "libffi"
-      "libvterm"
-      "libxml2"
-      "libxslt"
-      "lrzip"
       "luajit"
       "luarocks"
-      "mas"
       "p7zip"
       # "parallel"
-      "presenterm"
       "python@3.11"
-      "ripgrep"
-      "ruby"
       "rustup"
       "tmux" # TODO: home manager
       {
         name = "trash";
         link = true;
       }
-      "uutils-coreutils"
-      # "watch"
-      "websocat"
-      "xh"
-      "yadm"
-      {
-        name = "homebrew-zathura/zathura/zathura";
-        args = [ "with-synctex" ];
-      }
-      "homebrew-zathura/zathura/zathura-cb"
-      "homebrew-zathura/zathura/zathura-djvu"
-      "homebrew-zathura/zathura/zathura-pdf-mupdf"
-      "homebrew-zathura/zathura/zathura-ps"
       "nikolaeu/numi/numi-cli"
-      "noborus/tap/ov"
     ];
 
     casks = [
       "aerospace" # TODO:
       "detexify"
       "devonthink"
-      "ghostty" # TODO: home manager & wait for 1.2
+      "ghostty"
       "git-credential-manager"
-      "jordanbaird-ice@beta"
-      "macfuse"
+      "jordanbaird-ice@beta" # TODO: wait for 11.3
+      # "macfuse"
       "macs-fan-control"
       "nordvpn"
       "onyx"
