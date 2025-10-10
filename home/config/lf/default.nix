@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   xdg.configFile."lf/icons".source = ./icons;
   programs.lf = {
     enable = true;
     previewer = {
-      source = "${pkgs.mlpreview}/bin/mlpreview";
+      source = lib.getExe pkgs.mlpreview;
       keybinding = "i"; # TODO: override less with pager in overlay
     };
     extraConfig = builtins.readFile ./lfrc;
