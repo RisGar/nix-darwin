@@ -5,17 +5,17 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    josm
     # bitwarden-cli # TODO: wait until https://github.com/NixOS/nixpkgs/issues/339576 is fixed
-    # doomrunner # TODO: broken
     # opam  TODO:
     # zulip-term # TODO: broken
-    (callPackage ./doomrunner.nix { }) # TODO: wait until pr is on unstable
+    neovim # TODO: home manager
     airdrop-cli
     aria2
     babelfish
     beam.interpreters.erlang_28 # for gleescript
+    luarocks
     bear
+    doomrunner
     exercism
     ffmpeg
     grandperspective
@@ -23,7 +23,8 @@
     hyperfine
     iina
     imagemagick
-    isabelle # TODO: slowwww
+    isabelle
+    josm
     keepassxc
     mas
     moonlight-qt
@@ -69,51 +70,8 @@
       cleanup = "zap";
     };
 
-    masApps = {
-      "AdGuard for Safari" = 1440147259;
-      "Apple Configurator" = 1037126344;
-      "AusweisApp" = 948660805;
-      "Bitwarden" = 1352778147;
-      "ColorSlurp" = 1287239339;
-      "Craft" = 1487937127;
-      "Developer" = 640199958;
-      "Dropover" = 1355679052;
-      "eduVPN" = 1317704208;
-      "Flow" = 1423210932;
-      "Goodnotes" = 1444383602;
-      "Keynote" = 409183694;
-      "LocalSend" = 1661733229;
-      "Mastonaut" = 1450757574;
-      "MediaInfo" = 510620098;
-      "Mela" = 1568924476;
-      "Microsoft Excel" = 462058435;
-      "Microsoft PowerPoint" = 462062816;
-      "Microsoft Word" = 462054704;
-      "Numbers" = 409203825;
-      "Pages" = 409201541;
-      "PastePal" = 1503446680;
-      "PDFgear" = 6469021132;
-      "Perplexity" = 6714467650;
-      "Pixelmator Pro" = 1289583905;
-      "Reeder" = 1529448980;
-      "Rippple" = 1309894528;
-      "Shazam" = 897118787;
-      "Shukofukurou" = 1373973596;
-      "Simple Comic" = 1497435571;
-      "Step Two" = 1448916662;
-      "TestFlight" = 899247664;
-      "Things" = 904280696;
-      "TUMCampusApp" = 1557123392;
-      "Windows App" = 1295203466;
-      "WireGuard" = 1451685025;
-      "Xcode" = 497799835;
-      "DeTeXt" = 1531906207;
-    };
-
     taps = [
-      "homebrew-zathura/zathura"
       "homebrew/test-bot"
-      "nikitabobko/tap" # aerospace
       "nikolaeu/numi" # numi cli
       "sikarugir-app/sikarugir"
     ];
@@ -123,29 +81,22 @@
     brews = [
       "bitwarden-cli"
       # "libx11"
-      "aichat"
       # "openssl@3"
-      "bob"
-      "colima"
-      "llvm"
+      "colima" # TODO
       "docker" # TODO:
       "docker-buildx"
       "docker-compose"
       "docker-credential-helper"
       "dsda-doom"
-      "gh"
       # "pinentry"
       # "gnupg"
       "go"
       # "gstreamer"
       "juliaup"
-      "jupyterlab"
-      "luajit"
-      "luarocks"
       "p7zip"
       # "parallel"
-      "python@3.11"
-      "rustup"
+      # "python@3.11"
+      "rustup" # TODO: apps?
       "tmux" # TODO: home manager
       {
         name = "trash";
@@ -155,7 +106,6 @@
     ];
 
     casks = [
-      "aerospace" # TODO:
       "detexify"
       "devonthink"
       "ghostty"
@@ -176,9 +126,5 @@
       "zulip"
       # "xquartz"
     ];
-
-    # extraConfig = ''
-    #   brew "mupdf", args: ["as-dependency"], postinstall: "brew reinstall zathura-pdf-mupdf"
-    # '';
   };
 }
