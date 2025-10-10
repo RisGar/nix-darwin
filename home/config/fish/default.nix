@@ -5,7 +5,7 @@
   ...
 }:
 let
-  autoStartTmux = true;
+  autoStartTmux = false;
 in
 {
 
@@ -23,6 +23,7 @@ in
 
     trash = "trash -F";
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
+
   };
 
   home.sessionPath = [
@@ -77,6 +78,10 @@ in
     UNISON = "${config.xdg.dataHome}/unison";
     JULIA_DEPOT_PATH = "${config.xdg.dataHome}/julia:$JULIA_DEPOT_PATH";
     DOCKER_CONFIG = "${config.xdg.configHome}/docker";
+
+    ## C(++) compilers
+    CC = "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/llvm/bin/clang";
+    CXX = "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/llvm/bin/clang++";
   };
 
   home.sessionSearchVariables = {
@@ -98,7 +103,47 @@ in
   xdg.configFile."fish/themes/One Dark.theme".source = ./one_dark.theme;
   programs.fish = {
     enable = true;
-    shellInit = builtins.readFile ./config.fish;
+    shellInit = ''
+      # OCaml
+      source /Users/rishab/.local/share/opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
+
+      # fzf
+      set fzf_preview_dir_cmd eza --all --color=always
+      set fzf_fd_opts --hidden --exclude=.git
+
+      fzf_configure_bindings --directory=\cf
+
+      # Vi mode
+      function fish_user_key_bindings
+          fish_vi_key_bindings insert
+      end
+
+      set fish_cursor_default block blink
+      set fish_cursor_insert line blink
+      set fish_cursor_replace_one underscore blink
+      set fish_cursor_replace underscore blink
+      set fish_cursor_external line blink
+
+      # bind -M visual -m default y "fish_clipboard_copy; commandline -f end-selection repaint-mode"
+      # bind p forward-char "commandline -i ( pbpaste; echo )[1]" # TODO
+
+      # Theme
+      fish_config theme choose "One Dark"
+
+      # Fastfetch
+      function fish_greeting
+          fastfetch
+      end
+
+      # Starship transient prompts
+      function starship_transient_prompt_func
+          starship module character
+      end
+
+      function starship_transient_rprompt_func
+          starship module time
+      end
+    '';
     shellInitLast = lib.optionalString autoStartTmux ''
       if status is-interactive
       and not set -q TMUX
@@ -107,22 +152,51 @@ in
     '';
     functions = {
       # Adapted from https://gist.github.com/jsongerber/7dfd9f2d22ae060b98e15c5590c4828d
-      oil = ''
-        set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | gum filter --limit 1 --no-sort --fuzzy --placeholder 'Pick an ssh host' --prompt="󰣀 ")
-        if test -z "$host"
-            return 0
-        end
-        set user (ssh -G "$host" | grep '^user\>' | sed 's/^user //')
-        nvim oil-ssh://$user@$host/
-      '';
+      oil = {
+        description = "Opens pre-configured ssh hosts with oil";
+        body = ''
+          set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | gum filter --limit 1 --no-sort --fuzzy --placeholder 'Pick an ssh host' --prompt="󰣀 ")
+          if test -z "$host"
+              return 0
+          end
+          set user (ssh -G "$host" | grep '^user\>' | sed 's/^user //')
+          nvim oil-ssh://$user@$host/
+        '';
+      };
 
-      git_clone_and_cd = ''
-        git clone $argv[1]
-        if test $status -eq 0
-          set repo (basename $argv[1] .git)
-          cd $repo
-        end
-      '';
+      git_clone_and_cd = {
+        description = "Git clones a repo and cds into it";
+        body = ''
+          git clone $argv[1]
+          if test $status -eq 0
+            set repo (basename $argv[1] .git)
+            cd $repo
+          end
+        '';
+      };
+
+      lf = {
+        wraps = "lf";
+        description = "lf - Terminal file manager (changing directory on exit)";
+        body = "cd \"$(command lf -print-last-dir $argv)\"";
+      };
+
+      fd = {
+        wraps = "fd";
+        description = "fd with bat";
+        body = "command fd $argv -X bat";
+      };
+
+      reload = {
+        description = "Reloads nix-darwin";
+        body = ''
+          gltangle ~/.config/ghostty/README.md
+          ghostty +validate-config
+
+          sudo -i darwin-rebuild switch -I /etc/nix-darwin/flake.nix
+          source ~/.config/fish/config.fish
+        '';
+      };
     };
     shellAbbrs = {
       gc = "git_clone_and_cd";
