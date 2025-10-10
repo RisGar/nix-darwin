@@ -1,0 +1,52 @@
+theme = "Atom One Dark"
+bold-is-bright = true
+
+macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = hidden
+
+background-opacity = 0.90
+background-blur-radius = 20
+
+window-padding-y = 5
+window-padding-x = 10
+
+cursor-style-blink = true
+font-family = "Maple Mono NF CN"
+font-size = 14
+font-thicken = true
+# Ligatures
+font-feature = calt
+
+# i without left bottom bar
+font-feature = cv03
+
+# 7 with middle bar
+font-feature = cv09
+font-feature = cv42
+
+# Full width elipsis
+font-feature = cv97
+
+# Full width em dash (to find ai slop— )
+font-feature = cv98
+
+# Ligatures like >>= (for monads)
+font-feature = ss08
+
+# Ligatures like /=
+font-feature = ss11
+shell-integration = fish
+shell-integration-features = cursor, sudo, title
+window-save-state = always
+# macos-option-as-alt = true
+macos-option-as-alt = right
+
+# use alt + l/r to jump between words
+keybind = alt+right=unbind
+keybind = alt+left=unbind
+
+keybind = super+shift+right=next_tab
+keybind = super+shift+left=previous_tab
+
+# todo)) find better working keybind
+# keybind = global:super+equal=toggle_quick_terminal
