@@ -25,7 +25,6 @@
     };
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
-
   };
   outputs =
     inputs@{
@@ -45,7 +44,6 @@
         overlays = [
           unison-lang.overlay
           mlpreview.overlay
-          # airdrop-cli.overlay
         ];
       };
     in

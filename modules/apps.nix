@@ -5,7 +5,9 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    # bitwarden-cli # TODO: wait until https://github.com/NixOS/nixpkgs/issues/339576 is fixed
+    bitwarden-cli
+    man-pages-posix
+    man-pages
     # opam  TODO:
     # zulip-term # TODO: broken
     neovim # TODO: home manager
@@ -15,7 +17,9 @@
     beam.interpreters.erlang_28 # for gleescript
     luarocks
     bear
-    doomrunner
+    llvmPackages_latest.clang
+    llvmPackages_latest.clang-manpages
+    # doomrunner
     exercism
     ffmpeg
     grandperspective
@@ -24,10 +28,7 @@
     iina
     imagemagick
     isabelle
-    josm
-    keepassxc
-    mas
-    moonlight-qt
+    # moonlight-qt
     mosh
     nixd
     nixfmt
@@ -39,11 +40,9 @@
     pkgconf
     pngpaste # For img-clip.nvim
     presenterm
-    prismlauncher
     raycast
     semgrep
     shottr
-    spotify # TODO: wait until not broken
     suspicious-package
     terminal-notifier
     tlrc # tldr rust client
@@ -60,7 +59,6 @@
     xh
     xz
     zotero
-
   ];
 
   homebrew = {
@@ -79,25 +77,17 @@
     # `brew install`
     # TODO: migrate to nix
     brews = [
-      "bitwarden-cli"
-      # "libx11"
-      # "openssl@3"
       "colima" # TODO
       "docker" # TODO:
       "docker-buildx"
       "docker-compose"
       "docker-credential-helper"
       "dsda-doom"
-      # "pinentry"
-      # "gnupg"
-      "go"
-      # "gstreamer"
+      "go" # TODO: home manager
       "juliaup"
       "p7zip"
-      # "parallel"
-      # "python@3.11"
       "rustup" # TODO: apps?
-      "tmux" # TODO: home manager
+      # "tmux" # TODO: home manager
       {
         name = "trash";
         link = true;
@@ -110,8 +100,7 @@
       "devonthink"
       "ghostty"
       "git-credential-manager"
-      "jordanbaird-ice@beta" # TODO: wait for 11.3
-      # "macfuse"
+      "jordanbaird-ice@beta" # TODO: wait for 11.3 on unstable
       "macs-fan-control"
       "nordvpn"
       "onyx"
@@ -121,10 +110,14 @@
       "sikarugir-app/sikarugir/sikarugir"
       "steam"
       "transmission-remote-gui"
-      "ungoogled-chromium"
+      "ungoogled-chromium" # not avaliable for darwin rn
       "zen"
       "zulip"
-      # "xquartz"
+      "spotify" # breaks often on nix
+      "prismlauncher" # does not build on nix
+      "affinity-photo"
+      "affinity-designer"
+      "affinity-publisher"
     ];
   };
 }
