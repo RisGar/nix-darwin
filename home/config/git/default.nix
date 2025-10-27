@@ -3,9 +3,6 @@
   programs.git = {
     enable = true;
 
-    userName = "Rishab Garg";
-    userEmail = "me@rishab-garg.me";
-
     signing = {
       key = "7EC2233FD90AF4F1";
       signByDefault = true;
@@ -14,7 +11,12 @@
 
     lfs.enable = true;
 
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Rishab Garg";
+        email = "me@rishab-garg.me";
+      };
+
       core = {
         editor = "nvim";
         pager = "${pkgs.delta}/bin/delta --pager='ov -F'";
