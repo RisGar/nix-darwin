@@ -5,10 +5,9 @@
   ...
 }:
 let
-  autoStartTmux = false;
+  autoStartTmux = true;
 in
 {
-
   xdg.enable = true;
 
   home.shellAliases = {
@@ -80,8 +79,8 @@ in
     DOCKER_CONFIG = "${config.xdg.configHome}/docker";
 
     ## C(++) compilers
-    CC = "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/llvm/bin/clang";
-    CXX = "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/llvm/bin/clang++";
+    CC = lib.getExe pkgs.llvmPackages_latest.clang;
+    CXX = lib.getExe pkgs.llvmPackages_latest.clang + "++";
   };
 
   home.sessionSearchVariables = {
