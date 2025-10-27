@@ -1,6 +1,7 @@
 {
-  pkgs,
   config,
+  lib,
+  pkgs,
   ...
 }:
 {
@@ -23,13 +24,25 @@
 
   nix.gc.automatic = true;
 
-  home.packages = with pkgs; [
-    unison-ucm
-    mlpreview
-    delta # dependency of git config
-    maple-mono.NF
-    maple-mono.NF-CN
-  ];
+  home.packages =
+    with pkgs;
+    [
+      unison-ucm
+      mlpreview
+      delta # dependency of git config
+    ]
+    ++
+      # Fonts
+      [
+        maple-mono.NF
+        maple-mono.NF-CN
+        jost
+        raleway
+        source-sans
+        source-sans-pro
+        libertinus
+        hanken-grotesk
+      ];
 
   fonts.fontconfig.enable = true;
 
@@ -37,6 +50,8 @@
     ./config/git
     ./config/lf
     ./config/fish
+    ./config/aerospace
+    ./config/tmux
   ];
 
   programs.btop = {
@@ -109,7 +124,7 @@
     enable = true;
     config = {
       theme = "TwoDark";
-      pager = "ov -F -H3";
+      pager = "${lib.getExe pkgs.ov} -F -H3";
     };
   };
 
@@ -145,14 +160,14 @@
     nix-direnv.enable = true;
   };
 
-  programs.mise = {
-    enable = true;
-    globalConfig = {
-      tools = {
-        node = "lts";
-      };
-    };
-  };
+  # programs.mise = {
+  #   enable = true;
+  #   globalConfig = {
+  #     tools = {
+  #       node = "lts";
+  #     };
+  #   };
+  # };
 
   programs.gpg = {
     enable = true;
@@ -167,7 +182,7 @@
 
   programs.java = {
     enable = true;
-    package = pkgs.jdk17;
+    package = pkgs.jdk21;
   };
 
   programs.zathura = {
@@ -203,5 +218,15 @@
       "--classify=always"
       "--group-directories-first"
     ];
+  };
+
+  programs.gh = {
+    enable = true;
+    extensions = [ pkgs.gh-markdown-preview ];
+    settings = {
+      aliases = {
+        ".gitignore" = "!gh api -X GET /gitignore/templates/\"$1\" --jq \".source\"";
+      };
+    };
   };
 }
