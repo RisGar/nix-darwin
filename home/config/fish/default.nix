@@ -23,20 +23,20 @@ in
     trash = "trash -F";
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
 
+    gbs = "docker run -it -v $(pwd):/home gitlab.lrz.de:5005/gbs-cm/docker-setup/gbs-arm64:latest";
   };
 
   home.sessionPath = [
     "$(${config.home.sessionVariables.HOMEBREW_PREFIX}/bin/brew --prefix rustup)/bin"
     "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/llvm/bin"
     "$(${config.home.sessionVariables.HOMEBREW_PREFIX}/bin/brew --prefix python)/libexec/bin"
-    "$GOPATH/bin"
-    "$XDG_BIN_HOME"
+    config.programs.go.env.GOBIN
+    config.home.sessionVariables.XDG_BIN_HOME
     "$CARGO_HOME/bin"
     "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
     "${config.home.sessionVariables.HOMEBREW_PREFIX}/bin"
     "${config.home.sessionVariables.HOMEBREW_PREFIX}/sbin"
     "$CABAL_DIR/bin"
-    "$PNPM_HOME"
     "$GEM_HOME/bin"
     "${config.xdg.dataHome}/bob/nvim-bin"
     "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
@@ -56,7 +56,7 @@ in
 
     PAGER = "ov";
 
-    MACOSX_DEPLOYMENT_TARGET = 15;
+    # MACOSX_DEPLOYMENT_TARGET = 15;
 
     # Homebrew config
     HOMEBREW_PREFIX = "/opt/homebrew";
@@ -67,7 +67,6 @@ in
     # Force programs to use XDG dirs
     OPAMROOT = "${config.xdg.dataHome}/opam";
     NODE_REPL_HISTORY = "${config.xdg.dataHome}/node_repl_history";
-    GOPATH = "${config.xdg.dataHome}/go";
     GHCUP_USE_XDG_DIRS = 1;
     STACK_XDG = 1;
     KAGGLE_CONFIG_DIR = "${config.xdg.configHome}/kaggle";
@@ -103,19 +102,11 @@ in
   programs.fish = {
     enable = true;
     shellInit = ''
-      # OCaml
-      source /Users/rishab/.local/share/opam/opam-init/init.fish >/dev/null 2>/dev/null; or true
-
       # fzf
-      set fzf_preview_dir_cmd eza --all --color=always
+      set fzf_preview_dir_cmd ${lib.getExe config.programs.eza.package} --all --color=always
       set fzf_fd_opts --hidden --exclude=.git
 
       fzf_configure_bindings --directory=\cf
-
-      # Vi mode
-      function fish_user_key_bindings
-          fish_vi_key_bindings insert
-      end
 
       set fish_cursor_default block blink
       set fish_cursor_insert line blink
@@ -128,38 +119,27 @@ in
 
       # Theme
       fish_config theme choose "One Dark"
-
-      # Fastfetch
-      function fish_greeting
-          fastfetch
-      end
-
-      # Starship transient prompts
-      function starship_transient_prompt_func
-          starship module character
-      end
-
-      function starship_transient_rprompt_func
-          starship module time
-      end
     '';
+
+    # Autostart tmux if enabled
     shellInitLast = lib.optionalString autoStartTmux ''
       if status is-interactive
       and not set -q TMUX
         exec tmux new -As0
       end
     '';
+
     functions = {
       # Adapted from https://gist.github.com/jsongerber/7dfd9f2d22ae060b98e15c5590c4828d
       oil = {
         description = "Opens pre-configured ssh hosts with oil";
         body = ''
-          set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | gum filter --limit 1 --no-sort --fuzzy --placeholder 'Pick an ssh host' --prompt="󰣀 ")
+          set host (grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | ${lib.getExe pkgs.gum} filter --limit 1 --no-sort --fuzzy --placeholder 'Pick an ssh host' --prompt="󰣀 ")
           if test -z "$host"
               return 0
           end
           set user (ssh -G "$host" | grep '^user\>' | sed 's/^user //')
-          nvim oil-ssh://$user@$host/
+          ${lib.getExe pkgs.neovim} oil-ssh://$user@$host/
         '';
       };
 
@@ -177,14 +157,14 @@ in
       lf = {
         wraps = "lf";
         description = "lf - Terminal file manager (changing directory on exit)";
-        body = "cd \"$(command lf -print-last-dir $argv)\"";
+        body = "cd \"$(${lib.getExe config.programs.lf.package} -print-last-dir $argv)\"";
       };
 
-      fd = {
-        wraps = "fd";
-        description = "fd with bat";
-        body = "command fd $argv -X bat";
-      };
+      # fd = {
+      #   wraps = "fd";
+      #   description = "fd with bat";
+      #   body = "${lib.getExe pkgs.fd} $argv -X ${lib.getExe pkgs.bat}";
+      # };
 
       reload = {
         description = "Reloads nix-darwin";
@@ -194,6 +174,28 @@ in
 
           sudo -i darwin-rebuild switch -I /etc/nix-darwin/flake.nix
           source ~/.config/fish/config.fish
+        '';
+      };
+
+      # Fastfetch on greeting
+      fish_greeting = {
+        body = lib.getExe config.programs.fastfetch.package;
+      };
+
+      # Starship transient prompts
+      starship_transient_prompt_func = {
+        body = lib.getExe config.programs.starship.package + " module character";
+      };
+      starship_transient_rprompt_func = {
+        body = lib.getExe config.programs.starship.package + " module time";
+      };
+
+      # Vi mode
+
+      fish_user_key_bindings = {
+        body = ''
+          fish_default_key_bindings -M insert
+          fish_vi_key_bindings --no-erase insert
         '';
       };
     };
