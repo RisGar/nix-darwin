@@ -5,21 +5,21 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    bitwarden-cli
-    man-pages-posix
-    man-pages
+    rustup
     # opam  TODO:
     # zulip-term # TODO: broken
-    neovim # TODO: home manager
     airdrop-cli
+    docker
+    docker-credential-helpers
+    docker-compose
+    docker-buildx
     aria2
     babelfish
     beam.interpreters.erlang_28 # for gleescript
-    luarocks
     bear
-    llvmPackages_latest.clang
-    llvmPackages_latest.clang-manpages
-    # doomrunner
+    bitwarden-cli
+    colima
+    doomrunner
     exercism
     ffmpeg
     grandperspective
@@ -28,8 +28,14 @@
     iina
     imagemagick
     isabelle
-    # moonlight-qt
+    llvmPackages_latest.clang
+    llvmPackages_latest.clang-manpages
+    luarocks
+    man-pages
+    man-pages-posix
+    moonlight-qt
     mosh
+    neovim # TODO: home manager
     nixd
     nixfmt
     numi
@@ -77,16 +83,14 @@
     # `brew install`
     # TODO: migrate to nix
     brews = [
-      "colima" # TODO
-      "docker" # TODO:
-      "docker-buildx"
-      "docker-compose"
-      "docker-credential-helper"
+      # "docker" # TODO:
+      # "docker-buildx"
+      # "docker-compose"
+      # "docker-credential-helper"
       "dsda-doom"
-      "go" # TODO: home manager
-      "juliaup"
       "p7zip"
-      "rustup" # TODO: apps?
+      "juliaup"
+      # "rustup" # TODO: apps?
       # "tmux" # TODO: home manager
       {
         name = "trash";
