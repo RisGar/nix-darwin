@@ -20,6 +20,7 @@
 
   # Use Touch ID or Apple Watch for sudo auth
   security.pam.services.sudo_local.touchIdAuth = true;
+  security.pam.services.sudo_local.reattach = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
