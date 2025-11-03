@@ -4,10 +4,9 @@
   config,
   ...
 }:
-let
-  autoStartTmux = true;
-in
 {
+  vars.autoStartTmux = true;
+
   xdg.enable = true;
 
   home.shellAliases = {
@@ -27,20 +26,13 @@ in
   };
 
   home.sessionPath = [
-    "$(${config.home.sessionVariables.HOMEBREW_PREFIX}/bin/brew --prefix rustup)/bin"
-    "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/llvm/bin"
-    "$(${config.home.sessionVariables.HOMEBREW_PREFIX}/bin/brew --prefix python)/libexec/bin"
     config.programs.go.env.GOBIN
     config.home.sessionVariables.XDG_BIN_HOME
-    "$CARGO_HOME/bin"
+    "${config.home.sessionVariables.CARGO_HOME}/bin"
     "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-    "${config.home.sessionVariables.HOMEBREW_PREFIX}/bin"
-    "${config.home.sessionVariables.HOMEBREW_PREFIX}/sbin"
-    "$CABAL_DIR/bin"
-    "$GEM_HOME/bin"
-    "${config.xdg.dataHome}/bob/nvim-bin"
+    # "${config.home.sessionVariables.HOMEBREW_PREFIX}/bin"
+    # "${config.home.sessionVariables.HOMEBREW_PREFIX}/sbin"
     "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-    "${config.home.sessionVariables.HOMEBREW_PREFIX}/opt/ruby/bin"
     "/Library/TeX/texbin"
   ];
 
@@ -50,7 +42,7 @@ in
     LANG = "en_GB.UTF-8";
 
     # Use neovim as default editor and manpager
-    EDITOR = "nvim -e";
+    EDITOR = "nvim -e"; # TODO: should I really use ex mode?
     VISUAL = "nvim";
     MANPAGER = "nvim +Man!";
 
@@ -76,6 +68,7 @@ in
     UNISON = "${config.xdg.dataHome}/unison";
     JULIA_DEPOT_PATH = "${config.xdg.dataHome}/julia:$JULIA_DEPOT_PATH";
     DOCKER_CONFIG = "${config.xdg.configHome}/docker";
+    GRADLE_USER_HOME = "${config.xdg.dataHome}/gradle";
 
     ## C(++) compilers
     CC = lib.getExe pkgs.llvmPackages_latest.clang;
@@ -122,7 +115,7 @@ in
     '';
 
     # Autostart tmux if enabled
-    shellInitLast = lib.optionalString autoStartTmux ''
+    shellInitLast = lib.optionalString config.vars.autoStartTmux ''
       if status is-interactive
       and not set -q TMUX
         exec tmux new -As0
