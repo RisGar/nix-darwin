@@ -25,35 +25,72 @@
     };
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    # Homebrew taps
+    # homebrew-core = {
+    #   url = "github:homebrew/homebrew-core";
+    #   flake = false;
+    # };
+    # homebrew-cask = {
+    #   url = "github:homebrew/homebrew-cask";
+    #   flake = false;
+    # };
+    # homebrew-numi = {
+    #   url = "https://github.com/nikolaeu/homebrew-numi";
+    #   flake = false;
+    # };
+    # homebrew-sikarugir = {
+    #   url = "https://github.com/Sikarugir-App/homebrew-sikarugir";
+    #   flake = false;
+    # };
   };
   outputs =
     inputs@{
-      self,
+      home-manager,
       nix-darwin,
       nix-homebrew,
       nixpkgs,
-      home-manager,
-      unison-lang,
-      mlpreview,
+      self,
       ...
     }:
     let
-
       pkgs = import nixpkgs {
         system = "aarch64-darwin";
         overlays = [
-          unison-lang.overlay
-          mlpreview.overlay
+          inputs.unison-lang.overlay
+          inputs.mlpreview.overlay
         ];
+        config = {
+          allowUnfree = true;
+        };
       };
+
+      user = "rishab";
     in
     {
       # Build darwin flake using:
       # $ sudo -i darwin-rebuild build --flake .#Rishabs-MacBook-Pro
       darwinConfigurations."Rishabs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         modules = [
+          ./modules/system.nix
+          ./modules/brew.nix
+
+          home-manager.darwinModules.home-manager
           nix-homebrew.darwinModules.nix-homebrew
+
           {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${user} = ./home;
+              backupFileExtension = "bak";
+
+              extraSpecialArgs = {
+                inherit inputs;
+                inherit pkgs;
+              };
+            };
+
             nix-homebrew = {
               # Install Homebrew under the default prefix
               enable = true;
@@ -62,39 +99,28 @@
               enableRosetta = false;
 
               # User owning the Homebrew prefix
-              user = "rishab";
+              inherit user;
 
               # Automatically migrate existing Homebrew installations
               autoMigrate = true;
 
               # Declarative tap management
+              # TODO: can I make this work without uninstalling homebrew?
               # taps = {
               #   "homebrew/homebrew-core" = inputs.homebrew-core;
               #   "homebrew/homebrew-cask" = inputs.homebrew-cask;
+              #   "nikolaeu/homebrew-numi" = inputs.homebrew-numi; # numi cli
+              #   "sikarugir-app/homebrew-sikarugir" = inputs.homebrew-sikarugir;
               # };
+              #
+              # mutableTaps = true;
             };
           }
 
-          ./modules/system.nix
-          ./modules/apps.nix
-
-          home-manager.darwinModules.home-manager
-          {
-
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users."rishab" = ./home;
-            home-manager.backupFileExtension = "bak";
-
-            home-manager.extraSpecialArgs = {
-              inherit inputs;
-              inherit pkgs;
-              mlpreview = mlpreview;
-            };
-          }
         ];
         specialArgs = {
           inherit inputs;
+          inherit pkgs;
           flake-self = self;
         };
       };
