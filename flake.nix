@@ -64,8 +64,6 @@
           allowUnfree = true;
         };
       };
-
-      user = "rishab";
     in
     {
       # Build darwin flake using:
@@ -82,7 +80,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.${user} = ./home;
+              users."rishab" = ./home;
               backupFileExtension = "bak";
 
               extraSpecialArgs = {
@@ -99,7 +97,7 @@
               enableRosetta = false;
 
               # User owning the Homebrew prefix
-              inherit user;
+              user = "rishab";
 
               # Automatically migrate existing Homebrew installations
               autoMigrate = true;

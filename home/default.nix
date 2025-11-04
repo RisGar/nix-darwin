@@ -7,11 +7,12 @@
 {
 
   imports = [
+    ./config/aerospace
+    ./config/fish
     ./config/git
     ./config/lf
-    ./config/fish
-    ./config/aerospace
     ./config/tmux
+    ./config/zathura
   ];
 
   options = {
@@ -246,35 +247,6 @@
     programs.java = {
       enable = true;
       package = pkgs.jdk21;
-    };
-
-    programs.zathura = {
-      enable = true;
-      mappings = {
-        "r" = "reload";
-        "R" = "rotate";
-        "p" = "print";
-        "i" = "recolor";
-        "f" = "toggle_fullscreen";
-        "[fullscreen]f" = "toggle_fullscreen";
-      };
-      extraConfig = builtins.readFile ./config/zathura/zathurarc;
-      package = pkgs.zathura.override {
-        useMupdf = true;
-        zathura_core = pkgs.zathuraPkgs.zathura_core.overrideAttrs (previousAttrs: {
-          patches = (previousAttrs.patches or [ ]) ++ [
-            (
-              pkgs.fetchFromGitHub {
-                owner = "homebrew-zathura";
-                repo = "homebrew-zathura";
-                rev = "d199fece0240d0439494cf141b7c9d1c785ac784";
-                hash = "sha256-pE8d1idBFfBT5hsnOO/WN9BLC4FErDc/TsiSDGAvB/E= ";
-              }
-              + "/patches/mac-integration.diff"
-            )
-          ];
-        });
-      };
     };
 
     programs.ripgrep = {
