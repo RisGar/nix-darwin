@@ -35,10 +35,10 @@
       "keyColor": "green"
     },
     {
-      "type": "display",
-      "key": "󰍹  RES",
+      "type": "publicip",
+      "key": "   IP",
       "keyColor": "blue",
-      "format": "{}x{} {}Hz"
+      "format": "{}"
     },
     {
       "type": "cpu",
