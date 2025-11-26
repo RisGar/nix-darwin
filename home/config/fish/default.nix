@@ -41,10 +41,12 @@
 
     LANG = "en_GB.UTF-8";
 
+    LS_COLORS = "1";
+
     # Use neovim as default editor and manpager
-    EDITOR = "nvim -e"; # TODO: should I really use ex mode?
-    VISUAL = "nvim";
-    MANPAGER = "nvim +Man!";
+    EDITOR = "${lib.getExe pkgs.neovim} -e"; # TODO: should I really use ex mode?
+    VISUAL = "${lib.getExe pkgs.neovim}";
+    MANPAGER = "${lib.getExe pkgs.neovim} +Man!";
 
     PAGER = "ov";
 
@@ -69,6 +71,8 @@
     JULIA_DEPOT_PATH = "${config.xdg.dataHome}/julia:$JULIA_DEPOT_PATH";
     DOCKER_CONFIG = "${config.xdg.configHome}/docker";
     GRADLE_USER_HOME = "${config.xdg.dataHome}/gradle";
+    COLIMA_HOME = "${config.xdg.configHome}/colima";
+    DOCKER_HOST = "unix://${config.home.sessionVariables.COLIMA_HOME}/default/docker.sock";
 
     ## C(++) compilers
     CC = lib.getExe pkgs.llvmPackages_latest.clang;
@@ -165,7 +169,7 @@
           gltangle ~/.config/ghostty/README.md
           ghostty +validate-config
 
-          sudo -i darwin-rebuild switch -I /etc/nix-darwin/flake.nix
+          sudo -i darwin-rebuild switch -I ${config.vars.systemFlake}
           source ~/.config/fish/config.fish
         '';
       };
@@ -177,10 +181,19 @@
 
       # Starship transient prompts
       starship_transient_prompt_func = {
-        body = lib.getExe config.programs.starship.package + " module character";
+        body =
+          if config.programs.starship.enable then
+            "${lib.getExe config.programs.starship.package} module character"
+          else
+            "";
+
       };
       starship_transient_rprompt_func = {
-        body = lib.getExe config.programs.starship.package + " module time";
+        body =
+          if config.programs.starship.enable then
+            "${lib.getExe config.programs.starship.package} module time"
+          else
+            "";
       };
 
       # Vi mode
