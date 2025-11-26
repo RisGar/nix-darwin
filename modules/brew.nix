@@ -29,7 +29,6 @@
       "detexify"
       "devonthink"
       "ghostty" # not avaliable on darwin rn
-      "git-credential-manager"
       "jordanbaird-ice@beta" # TODO: wait for 11.3 on unstable
       "macs-fan-control"
       "nordvpn"
@@ -44,11 +43,12 @@
       "zulip"
       "spotify" # breaks often on nix
       "prismlauncher" # does not build on nix
-      "affinity-photo"
-      "affinity-designer"
-      "affinity-publisher"
+      # "affinity-photo"
+      # "affinity-designer"
+      # "affinity-publisher"
       "helium-browser"
       "xquartz" # TODO: make ssh -X via nix work
+      "affinity"
     ];
   };
 }
