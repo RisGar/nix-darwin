@@ -5,10 +5,11 @@
   ...
 }:
 {
-
   imports = [
     ./config/aerospace
+    ./config/eza
     ./config/fish
+    ./config/java
     ./config/git
     ./config/lf
     ./config/tmux
@@ -39,61 +40,65 @@
 
     nix.gc.automatic = true;
 
+    vars.systemFlake = "/etc/nix-darwin";
+
     home.packages =
       with pkgs;
       [
-        unison-ucm
-        mlpreview
-        delta # dependency of git config
-        mermaid-cli # dependency of snacks.image
-        pngpaste # For img-clip.nvim
-        tree-sitter # for nvim-treesitter
-      ]
-      ++ [
-        nodejs
-        rustup
-        # opam  TODO:
         # zulip-term # TODO: broken
+        git-credential-manager
+        clipboard-jh
         airdrop-cli
-        docker
-        docker-credential-helpers
-        docker-compose
-        docker-buildx
         babelfish
         beam.interpreters.erlang_28 # for gleescript
         bear
         bitwarden-cli
         colima
+        devcontainer
+        docker
+        docker-buildx
+        docker-compose
+        docker-credential-helpers
         doomrunner
         ffmpeg
+        github-copilot-cli
         grandperspective
+        http-server
         iina
         imagemagick
         isabelle
+        libqalculate
         llvmPackages_latest.clang
         llvmPackages_latest.clang-manpages
         luarocks
         man-pages
         man-pages-posix
+        mermaid-cli # dependency of snacks.image
+        mlpreview
         moonlight-qt
         mosh
         neovim # TODO: home manager
         nixd
         nixfmt
+        nodejs
         numi
         obsidian # TODO: home manager
         ov
         pcre2 # TODO: remove?
         pkgconf
+        pngpaste # For img-clip.nvim
         presenterm
         raycast
+        rustup
         shottr
         suspicious-package
         terminal-notifier
         tlrc # tldr rust client
         tokei
         transmission_4
-        typst # TODO: devshell?
+        tree-sitter # for nvim-treesitter
+        typst
+        unison-ucm
         virt-viewer
         vscode # TODO: home manager?
         wakatime-cli
@@ -102,6 +107,32 @@
         xh
         xz
         zotero
+        localsend
+      ]
+      ++ [
+        # LSPs
+        astro-language-server
+        basedpyright
+        bash-language-server
+        biome
+        docker-language-server
+        fish-lsp
+        gleam
+        jdt-language-server
+        lua-language-server
+        markdownlint-cli2
+        marksman
+        prettierd
+        ruff
+        stylua
+        svelte-language-server
+        tailwindcss-language-server
+        taplo
+        texlab
+        tinymist
+        vscode-langservers-extracted
+        vtsls
+        yaml-language-server
       ]
       ++
         # Fonts
@@ -123,28 +154,6 @@
       settings = {
         color_theme = "onedark"; # TODO: fix
         theme_background = false;
-      };
-    };
-
-    programs.sesh = {
-      enable = true;
-      enableTmuxIntegration = false; # TODO: custom prompt with nerd font instead of emojis via overlay
-      settings = {
-        default_session = {
-          preview_command = "eza -aF --color=always --git --group-directories-first --icons {}";
-          # startup_command = "nvim -c ':lua Snacks.picker.files(opts)'";
-        };
-
-        session = [
-          {
-            name = "Notes 󰎞";
-            path = "~/Documents/Notes";
-          }
-          {
-            name = "Nix 󱄅";
-            path = "/etc/nix-darwin";
-          }
-        ];
       };
     };
 
@@ -238,44 +247,12 @@
       homedir = "${config.xdg.dataHome}/gnupg";
     };
 
-    xdg.configFile."lazygit/config.yml".source = ./config/lazygit/config.yml;
-    programs.lazygit = {
-      enable = true;
-      # don't use settings as nix cannot natively read yaml files
-    };
-
-    programs.java = {
-      enable = true;
-      package = pkgs.jdk21;
-    };
-
     programs.ripgrep = {
       enable = true;
     };
 
     programs.jq = {
       enable = true;
-    };
-
-    programs.eza = {
-      enable = true;
-      colors = "always";
-      icons = "always";
-      git = true;
-      extraOptions = [
-        "--classify=always"
-        "--group-directories-first"
-      ];
-    };
-
-    programs.gh = {
-      enable = true;
-      extensions = [ pkgs.gh-markdown-preview ];
-      settings = {
-        aliases = {
-          ".gitignore" = "!gh api -X GET /gitignore/templates/\"$1\" --jq \".source\"";
-        };
-      };
     };
 
     programs.opam = {
@@ -298,6 +275,10 @@
     programs.vesktop = {
       enable = true;
     };
-  };
 
+    xdg.configFile."nvim" = {
+      source = ./config/nvim;
+      recursive = true;
+    };
+  };
 }
