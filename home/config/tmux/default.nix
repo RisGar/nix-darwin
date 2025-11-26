@@ -1,4 +1,12 @@
-{ pkgs, config, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  seshExe = lib.getExe config.programs.sesh.package;
+in
 {
   programs.tmux = {
     enable = true;
@@ -18,7 +26,7 @@
       set -g status-style "bg=default"
       set -g window-status-current-style "fg=blue bold"
       set -g status-left ""
-      set -g status-right " #S"
+      set -g status-right "#S"
 
       set -g history-limit 50000
       set -g focus-events on
@@ -32,32 +40,61 @@
 
       bind r source-file "~/.config/tmux/tmux.conf"
       bind b set -g status
-      bind e display-popup -b rounded -E  "tmux show-environment -g"
       bind ü copy-mode
       bind x kill-pane # skip "kill-pane? (y/n)" prompt
 
-      bind a run-shell "sesh connect \"$(
-        sesh list --icons | fzf --tmux 80%,70% \
+      bind a run-shell "${seshExe} connect \"$(
+        ${seshExe} list --icons | ${lib.getExe config.programs.fzf.package} --tmux 80%,70% \
           --no-sort --ansi --border-label ' sesh ' --prompt '󱐋  ' \
           --header '  󰘴a all 󰘴t tmux 󰘴g configs 󰘴x zoxide 󰘴d kill 󰘴f find' \
           --bind 'tab:down,btab:up' \
-          --bind 'ctrl-a:change-prompt(󱐋  )+reload(sesh list --icons)' \
-          --bind 'ctrl-t:change-prompt(  )+reload(sesh list -t --icons)' \
-          --bind 'ctrl-g:change-prompt(  )+reload(sesh list -c --icons)' \
-          --bind 'ctrl-x:change-prompt(󰉋  )+reload(sesh list -z --icons)' \
-          --bind 'ctrl-f:change-prompt(  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-          --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(󱐋  )+reload(sesh list --icons)' \
+          --bind 'ctrl-a:change-prompt(󱐋  )+reload(${seshExe} list --icons)' \
+          --bind 'ctrl-t:change-prompt(  )+reload(${seshExe} list -t --icons)' \
+          --bind 'ctrl-g:change-prompt(  )+reload(${seshExe} list -c --icons)' \
+          --bind 'ctrl-x:change-prompt(󰉋  )+reload(${seshExe} list -z --icons)' \
+          --bind 'ctrl-f:change-prompt(  )+reload(${lib.getExe config.programs.fd.package} -H -d 2 -t d -E .Trash . ~)' \
+          --bind 'ctrl-d:execute(${lib.getExe config.programs.tmux.package} kill-session -t {2..})+change-prompt(󱐋  )+reload(sesh list --icons)' \
           --preview-window 'right:55%' \
-          --preview 'sesh preview {}'
+          --preview '${seshExe} preview {}'
       )\""
 
-      bind g display-popup -b rounded -E -xC -yC -w 80% -h 80% -d "#{pane_current_path}" lazygit
+      bind-key g display-popup -b rounded -E -xC -yC -w 80% -h 80% -d "#{pane_current_path}" ${lib.getExe config.programs.lazygit.package} 
 
-      bind-key N display-popup -b rounded -E "nvim ~/Documents/Notes/scratch.md"
+      bind-key N display-popup -b rounded -E "${lib.getExe pkgs.neovim} ~/Documents/Notes/scratch.md"
 
       # vim like selection keys
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
     '';
+  };
+
+  programs.sesh = {
+    enable = true;
+    enableTmuxIntegration = false; # TODO: custom prompt with nerd font instead of emojis via overlay
+    settings = {
+      default_session = {
+        preview_command = "${lib.getExe config.programs.eza.package} -aF --color=always --git --group-directories-first --icons {}";
+        startup_command = "${lib.getExe pkgs.neovim} -c ':lua Snacks.picker.files(opts)'";
+      };
+
+      session = [
+        {
+          name = "Notes 󰎞";
+          path = "~/Documents/Notes";
+          windows = [ "empty" ];
+        }
+        {
+          name = "Nix 󱄅";
+          path = config.vars.systemFlake;
+          windows = [ "empty" ];
+        }
+      ];
+
+      window = [
+        {
+          name = "empty";
+        }
+      ];
+    };
   };
 }
