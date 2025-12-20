@@ -57,7 +57,7 @@
       pkgs = import nixpkgs {
         system = "aarch64-darwin";
         overlays = [
-          inputs.unison-lang.overlay
+          # inputs.unison-lang.overlay
           inputs.mlpreview.overlay
         ];
         config = {
