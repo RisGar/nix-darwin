@@ -1,9 +1,8 @@
 # Place a copy of this config to ~/.aerospace.toml
 # After that, you can edit ~/.aerospace.toml to your liking
 
-# You can use it to add commands that run after AeroSpace startup.
-# Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+start-at-login = true
+
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
@@ -56,7 +55,6 @@ if.window-title-regex-substring = "Picture-in-Picture"
 run = ["layout floating"]
 check-further-callbacks = true
 
-
 [[on-window-detected]]
 if.app-id = "app.zen-browser.zen"
 run = ["move-node-to-workspace w"]
@@ -68,6 +66,10 @@ run = ["move-node-to-workspace t"]
 [[on-window-detected]]
 if.app-id = "md.obsidian"
 run = ["move-node-to-workspace d"]
+
+[[on-window-detected]]
+if.app-id = "com.IdeaPunch.ColorSlurp"
+run = ["layout floating"]
 
 [workspace-to-monitor-force-assignment]
 1 = "main"

@@ -1,3 +1,5 @@
+# sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE
+
 set current_monitor (aerospace list-monitors --focused | awk '{print $1}')
 set pip_windows (aerospace list-windows --monitor "$current_monitor" | grep -E "(Picture-in-Picture|Picture in Picture)" | awk '{print $1}')
 
