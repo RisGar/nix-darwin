@@ -33,6 +33,8 @@ in
       set -gq allow-passthrough all
       set -g detach-on-destroy off  # don't exit from tmux when closing a session
 
+      set -g clock-mode-style 24
+
       # Set new panes to open in current directory
       bind c new-window -c "#{pane_current_path}"
       bind - split-window -c "#{pane_current_path}"
@@ -60,7 +62,7 @@ in
 
       bind-key g display-popup -b rounded -E -xC -yC -w 80% -h 80% -d "#{pane_current_path}" ${lib.getExe config.programs.lazygit.package} 
 
-      bind-key N display-popup -b rounded -E "${lib.getExe pkgs.neovim} ~/Documents/Notes/scratch.md"
+      bind-key N display-popup -b rounded -E -w 80% -h 80% "${lib.getExe pkgs.neovim} ~/Documents/Notes/scratch.md"
 
       # vim like selection keys
       bind-key -T copy-mode-vi v send-keys -X begin-selection
@@ -79,12 +81,12 @@ in
 
       session = [
         {
-          name = "Notes 󰎞";
+          name = "Notes 󰎞 ";
           path = "~/Documents/Notes";
           windows = [ "empty" ];
         }
         {
-          name = "Nix 󱄅";
+          name = "Nix 󱄅 ";
           path = config.vars.systemFlake;
           windows = [ "empty" ];
         }
