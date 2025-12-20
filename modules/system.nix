@@ -32,6 +32,7 @@
     dock = {
       autohide = true;
       autohide-delay = 0.0;
+      autohide-time-modifier = 0.0;
 
       tilesize = 54;
       largesize = 70;
@@ -40,6 +41,10 @@
 
       wvous-tl-corner = 10; # Put display to sleep
       wvous-tr-corner = 13; # Lock Screen
+
+      expose-group-apps = true;
+      launchanim = true;
+      mineffect = "scale";
     };
 
     hitoolbox.AppleFnUsageType = "Show Emoji & Symbols";
@@ -60,6 +65,11 @@
 
     SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
 
+    iCal = {
+      CalendarSidebarShown = true;
+      "first day of week" = "System Setting";
+    };
+
     menuExtraClock = {
       FlashDateSeparators = false;
       IsAnalog = false;
@@ -69,6 +79,14 @@
       ShowDayOfWeek = true;
       ShowSeconds = false;
     };
+
+    ActivityMonitor = {
+      IconType = 0;
+      OpenMainWindow = true;
+      ShowCategory = 100;
+    };
+
+    LaunchServices.LSQuarantine = true; # TODO: do i need quarantine
   };
 
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -77,5 +95,47 @@
 
   nix.optimise.automatic = true;
   nix.gc.automatic = true;
+
+  services.dnscrypt-proxy = {
+    enable = true;
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+      http3 = true;
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/cache/dnscrypt-proxy/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+      forwarding_rules = ./forwarding-rules.conf;
+      monitoring_ui = {
+        enabled = true;
+        listen_address = "127.0.0.1:8080";
+        username = "admin";
+        password = "changeme";
+        tls_certificate = "";
+        tls_key = "";
+        enable_query_log = true;
+        privacy_level = 1;
+      };
+    };
+
+  };
+
+  launchd.daemons.dnscrypt-proxy.serviceConfig.UserName = pkgs.lib.mkForce "root";
+
+  networking = {
+    knownNetworkServices = [
+      "Wi-Fi"
+      "USB 10/100/1000 LAN"
+    ];
+    dns = [
+      "::1"
+      "127.0.0.1"
+    ];
+  };
 
 }
