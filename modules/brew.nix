@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 {
   homebrew = {
     enable = true;
@@ -43,12 +43,12 @@
       "zulip"
       "spotify" # breaks often on nix
       "prismlauncher" # does not build on nix
-      # "affinity-photo"
-      # "affinity-designer"
-      # "affinity-publisher"
       "helium-browser"
       "xquartz" # TODO: make ssh -X via nix work
       "affinity"
+      "prusaslicer"
+      "zoom"
+      "ungoogled-chromium"
     ];
   };
 }
