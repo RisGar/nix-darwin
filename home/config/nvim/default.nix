@@ -1,4 +1,5 @@
 { config, lib, ... }:
+
 {
   nvim = {
     enable = true;
