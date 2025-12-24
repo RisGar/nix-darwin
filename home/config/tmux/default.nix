@@ -62,7 +62,7 @@ in
 
       bind-key g display-popup -b rounded -E -xC -yC -w 80% -h 80% -d "#{pane_current_path}" ${lib.getExe config.programs.lazygit.package} 
 
-      bind-key N display-popup -b rounded -E -w 80% -h 80% "${lib.getExe pkgs.neovim} ~/Documents/Notes/scratch.md"
+      bind-key N display-popup -b rounded -E -w 80% -h 80% "${config.home.sessionVariables.EDITOR} ~/Documents/Notes/scratch.md"
 
       # vim like selection keys
       bind-key -T copy-mode-vi v send-keys -X begin-selection
@@ -76,7 +76,7 @@ in
     settings = {
       default_session = {
         preview_command = "${lib.getExe config.programs.eza.package} -aF --color=always --git --group-directories-first --icons {}";
-        startup_command = "${lib.getExe pkgs.neovim} -c ':lua Snacks.picker.files(opts)'";
+        startup_command = "${config.home.sessionVariables.EDITOR} -c ':lua Snacks.picker.files(opts)'";
       };
 
       session = [

@@ -1,7 +1,7 @@
-{ pkgs, flake-self, ... }:
+{ pkgs, self, ... }:
 {
   # Set Git commit hash for darwin-version.
-  system.configurationRevision = flake-self.rev or flake-self.dirtyRev or null;
+  system.configurationRevision = self.rev or self.dirtyRev or null;
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";

@@ -1,5 +1,5 @@
 {
-  description = "Example nix-darwin system flake";
+  description = "nix-darwin system flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -14,17 +14,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    unison-lang = {
-      url = "github:ceedubs/unison-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     mlpreview = {
       url = "github:RisGar/mlpreview";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    nvim-config = {
+      url = "git+file:///Users/rishab/Documents/Programming/nvim-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixln-edit = {
+      url = "github:nlintn/nixln-edit";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Homebrew taps
     # homebrew-core = {
@@ -45,20 +50,30 @@
     # };
   };
   outputs =
-    inputs@{
-      home-manager,
-      nix-darwin,
-      nix-homebrew,
+    {
       nixpkgs,
+      home-manager,
+      nix-homebrew,
+      mlpreview,
+      nixln-edit,
+      nix-darwin,
+      # homebrew-core,
+      # homebrew-sikarugir,
+      # homebrew-numi,
+      # homebrew-cask,
+      nvim-config,
       self,
       ...
     }:
     let
+      system = "aarch64-darwin";
+    in
+    let
       pkgs = import nixpkgs {
-        system = "aarch64-darwin";
+        inherit system;
         overlays = [
-          # inputs.unison-lang.overlay
-          inputs.mlpreview.overlay
+          mlpreview.overlays.default
+          (final: prev: { nixln-edit = nixln-edit.packages.${system}.default; })
         ];
         config = {
           allowUnfree = true;
@@ -84,8 +99,8 @@
               backupFileExtension = "bak";
 
               extraSpecialArgs = {
-                inherit inputs;
                 inherit pkgs;
+                inherit nvim-config;
               };
             };
 
@@ -105,21 +120,19 @@
               # Declarative tap management
               # TODO: can I make this work without uninstalling homebrew?
               # taps = {
-              #   "homebrew/homebrew-core" = inputs.homebrew-core;
-              #   "homebrew/homebrew-cask" = inputs.homebrew-cask;
-              #   "nikolaeu/homebrew-numi" = inputs.homebrew-numi; # numi cli
-              #   "sikarugir-app/homebrew-sikarugir" = inputs.homebrew-sikarugir;
+              #   "homebrew/homebrew-core" = homebrew-core;
+              #   "homebrew/homebrew-cask" = homebrew-cask;
+              #   "nikolaeu/homebrew-numi" = homebrew-numi; # numi cli
+              #   "sikarugir-app/homebrew-sikarugir" = homebrew-sikarugir;
               # };
-              #
               # mutableTaps = true;
             };
           }
 
         ];
         specialArgs = {
-          inherit inputs;
           inherit pkgs;
-          flake-self = self;
+          inherit self;
         };
       };
     };
