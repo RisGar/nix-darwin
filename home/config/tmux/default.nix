@@ -10,8 +10,7 @@ in
 {
   programs.tmux = {
     enable = true;
-    mouse = true;
-    newSession = true;
+    mouse = false;
     prefix = "C-a";
     extraConfig = ''
       set -g default-terminal "screen-256color"
@@ -83,18 +82,10 @@ in
         {
           name = "Notes 󰎞 ";
           path = "~/Documents/Notes";
-          windows = [ "empty" ];
         }
         {
           name = "Nix 󱄅 ";
           path = config.vars.systemFlake;
-          windows = [ "empty" ];
-        }
-      ];
-
-      window = [
-        {
-          name = "empty";
         }
       ];
     };
