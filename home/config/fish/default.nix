@@ -19,6 +19,7 @@
     ".." = "z ..";
 
     nixrepl = "nix repl --expr '{inherit (import <nixpkgs> {}) pkgs lib;}'";
+    flakerepl = "nix repl --expr 'builtins.getFlake \"${config.vars.systemFlake}\"'";
 
     trash = "trash -F";
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
@@ -31,8 +32,6 @@
     config.home.sessionVariables.XDG_BIN_HOME
     "${config.home.sessionVariables.CARGO_HOME}/bin"
     "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-    # "${config.home.sessionVariables.HOMEBREW_PREFIX}/bin"
-    # "${config.home.sessionVariables.HOMEBREW_PREFIX}/sbin"
     "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
     "/Library/TeX/texbin"
   ];
@@ -169,10 +168,9 @@
       reload = {
         description = "Reloads nix-darwin";
         body = ''
-          gltangle ~/.config/ghostty/README.md
-          ghostty +validate-config
-
           sudo -i darwin-rebuild switch -I ${config.vars.systemFlake}
+          ghostty +validate-config
+          tmux source-file ~/.config/tmux/tmux.conf
           source ~/.config/fish/config.fish
         '';
       };
@@ -235,5 +233,4 @@
       }
     ];
   };
-
 }
