@@ -7,6 +7,7 @@
 
 {
   vars.autoStartTmux = true;
+  vars.autoStartFastfetch = true;
 
   xdg.enable = true;
 
@@ -98,6 +99,9 @@
   xdg.configFile."fish/themes/One Dark.theme".source = ./one_dark.theme;
   programs.fish = {
     enable = true;
+
+    generateCompletions = true;
+
     shellInit = ''
       # fzf
       set fzf_preview_dir_cmd ${lib.getExe config.programs.eza.package} --all --color=always
@@ -177,7 +181,7 @@
 
       # Fastfetch on greeting
       fish_greeting = {
-        body = lib.getExe config.programs.fastfetch.package;
+        body = if config.vars.autoStartFastfetch then lib.getExe config.programs.fastfetch.package else "";
       };
 
       # Starship transient prompts
@@ -233,4 +237,5 @@
       }
     ];
   };
+
 }
