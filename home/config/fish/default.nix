@@ -4,6 +4,7 @@
   config,
   ...
 }:
+
 {
   vars.autoStartTmux = true;
 
@@ -22,7 +23,7 @@
     trash = "trash -F";
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
 
-    gbs = "docker run -it -v $(pwd):/home gitlab.lrz.de:5005/gbs-cm/docker-setup/gbs-arm64:latest";
+    gbs = "podman run -it -v $(pwd):/home gitlab.lrz.de:5005/gbs-cm/docker-setup/gbs-arm64:latest";
   };
 
   home.sessionPath = [
@@ -41,14 +42,14 @@
 
     LANG = "en_GB.UTF-8";
 
-    LS_COLORS = "1";
+    LS_COLORS = "1"; # TODO
 
     # Use neovim as default editor and manpager
-    EDITOR = "${lib.getExe pkgs.neovim} -e"; # TODO: should I really use ex mode?
-    VISUAL = "${lib.getExe pkgs.neovim}";
-    MANPAGER = "${lib.getExe pkgs.neovim} +Man!";
+    EDITOR = lib.getExe config.nvim.out.packages.nvim;
+    VISUAL = lib.getExe config.nvim.out.packages.nvim;
+    MANPAGER = lib.getExe config.nvim.out.packages.nvim + " +Man!";
 
-    PAGER = "ov";
+    PAGER = lib.getExe pkgs.ov;
 
     # MACOSX_DEPLOYMENT_TARGET = 15;
 
@@ -69,10 +70,10 @@
     WAKATIME_HOME = "${config.xdg.configHome}/wakatime";
     UNISON = "${config.xdg.dataHome}/unison";
     JULIA_DEPOT_PATH = "${config.xdg.dataHome}/julia:$JULIA_DEPOT_PATH";
-    DOCKER_CONFIG = "${config.xdg.configHome}/docker";
+    # DOCKER_CONFIG = "${config.xdg.configHome}/docker";
     GRADLE_USER_HOME = "${config.xdg.dataHome}/gradle";
-    COLIMA_HOME = "${config.xdg.configHome}/colima";
-    DOCKER_HOST = "unix://${config.home.sessionVariables.COLIMA_HOME}/default/docker.sock";
+    # COLIMA_HOME = "${config.xdg.configHome}/colima";
+    # DOCKER_HOST = "unix://${config.home.sessionVariables.COLIMA_HOME}/default/docker.sock";
 
     ## C(++) compilers
     CC = lib.getExe pkgs.llvmPackages_latest.clang;
@@ -136,7 +137,7 @@
               return 0
           end
           set user (ssh -G "$host" | grep '^user\>' | sed 's/^user //')
-          ${lib.getExe pkgs.neovim} oil-ssh://$user@$host/
+          ${config.home.sessionVariables.EDITOR} oil-ssh://$user@$host/
         '';
       };
 
@@ -146,7 +147,9 @@
           git clone $argv[1]
           if test $status -eq 0
             set repo (basename $argv[1] .git)
-            cd $repo
+            z $repo
+            z ..
+            sesh connect $repo
           end
         '';
       };
@@ -232,4 +235,5 @@
       }
     ];
   };
+
 }

@@ -7,7 +7,7 @@
     enable = true;
     enableDefaultConfig = false;
     includes = [
-      "${config.xdg.configHome}/colima/ssh_config"
+      # "${config.xdg.configHome}/colima/ssh_config"
     ];
     matchBlocks = {
       "*" = {

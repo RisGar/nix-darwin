@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  nvim-config,
   ...
 }:
 {
@@ -14,6 +15,10 @@
     ./config/lf
     ./config/tmux
     ./config/zathura
+    ./config/sketchybar
+    ./config/ssh
+    ./config/nvim
+    nvim-config.homeModule
   ];
 
   options = {
@@ -33,34 +38,40 @@
     # You can update Home Manager without changing this value. See
     # the Home Manager release notes for a list of state version
     # changes in each release.
-    home.stateVersion = "25.05";
+    home.stateVersion = "25.11";
 
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
+
+    # vars.system = "aarch64-darwin";
 
     nix.gc.automatic = true;
 
     vars.systemFlake = "/etc/nix-darwin";
 
+    home.preferXdgDirectories = true;
+
     home.packages =
       with pkgs;
       [
         # zulip-term # TODO: broken
-        git-credential-manager
-        clipboard-jh
+        nixln-edit
+        podman
+        podman-compose
+        papers
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
         bear
-        bitwarden-cli
-        colima
+        clipboard-jh
         devcontainer
-        docker
-        docker-buildx
-        docker-compose
-        docker-credential-helpers
+        # docker
+        # docker-buildx
+        # docker-compose
+        # docker-credential-helpers
         doomrunner
         ffmpeg
+        git-credential-manager
         github-copilot-cli
         grandperspective
         http-server
@@ -70,69 +81,53 @@
         libqalculate
         llvmPackages_latest.clang
         llvmPackages_latest.clang-manpages
+        localsend
         luarocks
         man-pages
         man-pages-posix
-        mermaid-cli # dependency of snacks.image
         mlpreview
         moonlight-qt
         mosh
-        neovim # TODO: home manager
         nixd
         nixfmt
         nodejs
         numi
         obsidian # TODO: home manager
         ov
-        pcre2 # TODO: remove?
+        # pcre2 # TODO: remove?
         pkgconf
-        pngpaste # For img-clip.nvim
         presenterm
-        raycast
         rustup
         shottr
         suspicious-package
         terminal-notifier
         tlrc # tldr rust client
         tokei
-        transmission_4
-        tree-sitter # for nvim-treesitter
         typst
         unison-ucm
         virt-viewer
-        vscode # TODO: home manager?
+        vscode
         wakatime-cli
-        wget # required by mason
         xdg-ninja
-        xh
         xz
         zotero
-        localsend
+        opencode
+        captive-browser
+        julia-bin
       ]
       ++ [
-        # LSPs
-        astro-language-server
-        basedpyright
-        bash-language-server
-        biome
-        docker-language-server
-        fish-lsp
-        gleam
-        jdt-language-server
-        lua-language-server
-        markdownlint-cli2
-        marksman
-        prettierd
-        ruff
-        stylua
-        svelte-language-server
-        tailwindcss-language-server
-        taplo
-        texlab
-        tinymist
-        vscode-langservers-extracted
-        vtsls
-        yaml-language-server
+        (raycast.overrideAttrs {
+          version = "1.104.1";
+          src =
+            {
+              aarch64-darwin = builtins.fetchurl {
+                name = "Raycast.dmg";
+                url = "https://releases.raycast.com/releases/1.104.1/download?build=arm";
+                sha256 = "sha256-zm+r7f7uTUPtvLTVyVf18VwADltyOur8lPqqvpWrRu8=";
+              };
+            }
+            .${stdenvNoCC.system};
+        })
       ]
       ++
         # Fonts
@@ -145,6 +140,7 @@
           source-sans-pro
           libertinus
           hanken-grotesk
+          carlito
         ];
 
     fonts.fontconfig.enable = true;
@@ -276,9 +272,43 @@
       enable = true;
     };
 
-    xdg.configFile."nvim" = {
-      source = ./config/nvim;
-      recursive = true;
+    programs.man = {
+      generateCaches = false;
     };
+
+    xdg.configFile."captive-browser.toml".text = ''
+      browser = ${
+        lib.concatStringsSep " " [
+          ''"""''
+          ''open -n -W -a "Helium" --args''
+          ''--user-data-dir=${config.xdg.dataHome}/chromium-captive''
+          ''--proxy-server="socks5://$PROXY"''
+          ''--proxy-bypass-list="<-loopback>"''
+          ''--no-first-run''
+          ''--new-window''
+          ''--incognito''
+          ''--no-default-browser-check''
+          ''--no-crash-upload''
+          ''--disable-extensions''
+          ''--disable-sync''
+          ''--disable-background-networking''
+          ''--disable-client-side-phishing-detection''
+          ''--disable-component-update''
+          ''--disable-translate''
+          ''--disable-web-resources''
+          ''--safebrowsing-disable-auto-update''
+          ''http://detectportal.firefox.com/canonical.html''
+          ''"""''
+        ]
+      } 
+      dhcp-dns = "ipconfig getoption en0 domain_name_server"
+      socks5-addr = "localhost:11666"
+    '';
+
+    gtk = {
+      enable = true;
+      colorScheme = "dark";
+    };
+
   };
 }
