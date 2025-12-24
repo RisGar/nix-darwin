@@ -8,7 +8,6 @@
     };
 
     taps = [
-      "nikolaeu/numi" # numi cli
       "sikarugir-app/sikarugir"
     ];
     # taps = builtins.attrNames config.nix-homebrew.taps;
@@ -21,14 +20,12 @@
         name = "trash";
         link = true;
       }
-      "nikolaeu/numi/numi-cli"
     ];
 
     casks = [
       "detexify"
       "devonthink"
       "ghostty" # not avaliable on darwin rn
-      "jordanbaird-ice@beta" # TODO: wait for 11.3 on unstable
       "macs-fan-control"
       "nordvpn"
       "onyx"
@@ -41,13 +38,12 @@
       "zen"
       "zulip"
       "spotify" # breaks often on nix
-      "prismlauncher" # does not build on nix
+      # "prismlauncher"
       "helium-browser"
       "xquartz" # TODO: make ssh -X via nix work
       "affinity"
       "prusaslicer"
       "zoom"
-      "ungoogled-chromium"
     ];
   };
 }
