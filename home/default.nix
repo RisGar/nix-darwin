@@ -5,19 +5,28 @@
   nvim-config,
   ...
 }:
+let
+  ice-bar-beta = pkgs.ice-bar.overrideAttrs (oldAttrs: rec {
+    version = "0.11.13-dev.2";
+    src = pkgs.fetchurl {
+      url = "https://github.com/jordanbaird/Ice/releases/download/${version}/Ice.zip";
+      hash = "sha256-wbuqcfYev+Xuko95CvYJY6nyAjZNY/eNLGs+xRBc9KA=";
+    };
+  });
+in
 {
   imports = [
     ./config/aerospace
     ./config/eza
     ./config/fish
-    ./config/java
     ./config/git
+    ./config/java
     ./config/lf
-    ./config/tmux
-    ./config/zathura
+    ./config/nvim
     ./config/sketchybar
     ./config/ssh
-    ./config/nvim
+    ./config/tmux
+    ./config/zathura
     nvim-config.homeModule
   ];
 
@@ -47,28 +56,26 @@
 
     nix.gc.automatic = true;
 
-    vars.systemFlake = "/etc/nix-darwin";
+    vars.systemFlake = "/private/etc/nix-darwin";
+
+    # old behaviour of linking instead of copying into Applications folder
+    targets.darwin.linkApps.enable = true;
+    targets.darwin.copyApps.enable = false;
 
     home.preferXdgDirectories = true;
 
     home.packages =
       with pkgs;
       [
+        # pcre2 # TODO: remove?
         # zulip-term # TODO: broken
-        nixln-edit
-        podman
-        podman-compose
-        papers
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
         bear
+        captive-browser
         clipboard-jh
         devcontainer
-        # docker
-        # docker-buildx
-        # docker-compose
-        # docker-credential-helpers
         doomrunner
         ffmpeg
         git-credential-manager
@@ -78,6 +85,7 @@
         iina
         imagemagick
         isabelle
+        # julia-bin
         libqalculate
         llvmPackages_latest.clang
         llvmPackages_latest.clang-manpages
@@ -90,13 +98,18 @@
         mosh
         nixd
         nixfmt
+        nixln-edit
         nodejs
         numi
         obsidian # TODO: home manager
+        opencode
         ov
-        # pcre2 # TODO: remove?
+        papers
         pkgconf
+        podman
+        podman-compose
         presenterm
+        prismlauncher
         rustup
         shottr
         suspicious-package
@@ -111,23 +124,10 @@
         xdg-ninja
         xz
         zotero
-        opencode
-        captive-browser
-        julia-bin
       ]
       ++ [
-        (raycast.overrideAttrs {
-          version = "1.104.1";
-          src =
-            {
-              aarch64-darwin = builtins.fetchurl {
-                name = "Raycast.dmg";
-                url = "https://releases.raycast.com/releases/1.104.1/download?build=arm";
-                sha256 = "sha256-zm+r7f7uTUPtvLTVyVf18VwADltyOur8lPqqvpWrRu8=";
-              };
-            }
-            .${stdenvNoCC.system};
-        })
+        raycast
+        ice-bar-beta
       ]
       ++
         # Fonts
@@ -310,5 +310,6 @@
       colorScheme = "dark";
     };
 
+    xdg.configFile."ghostty/config".text = builtins.readFile ./config/ghostty/config;
   };
 }
