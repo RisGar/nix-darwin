@@ -17,7 +17,6 @@
     # TODO: migrate to nix
     brews = [
       "dsda-doom"
-      "juliaup" # not avaliable on darwin
       {
         name = "trash";
         link = true;
