@@ -17,13 +17,15 @@ in
 {
   imports = [
     ./config/aerospace
+    ./config/captive-browser
     ./config/eza
+    ./config/fastfetch
     ./config/fish
+    ./config/fzf
     ./config/git
     ./config/java
     ./config/lf
     ./config/nvim
-    ./config/sketchybar
     ./config/ssh
     ./config/tmux
     ./config/zathura
@@ -145,36 +147,15 @@ in
 
     fonts.fontconfig.enable = true;
 
+    xdg.configFile."btop/themes/onedark.theme".text =
+      builtins.readFile "${config.programs.btop.package.outPath}/share/btop/themes/onedark.theme"; # fix themes not working with home-manager symlink
     programs.btop = {
       enable = true;
       settings = {
         color_theme = "onedark"; # TODO: fix
         theme_background = false;
+        vim_keys = true;
       };
-    };
-
-    programs.fzf = {
-      enable = true;
-      colors = {
-        fg = "-1";
-        "fg+" = "#ffffff";
-        bg = "-1";
-        "bg+" = "#4b5263";
-        hl = "#c678dd";
-        "hl+" = "#d858fe";
-        info = "#98c379";
-        prompt = "#61afef";
-        pointer = "#be5046";
-        marker = "#e5c07b";
-        spinner = "#61afef";
-        header = "#61afef";
-      };
-      defaultOptions = [
-        "--cycle"
-        "--layout=reverse"
-      ];
-      enableFishIntegration = false; # use fzf.fish
-      # Also don't use tmux integration as `fzf-tmux` has been replaced by `--tmux`
     };
 
     programs.zoxide = {
@@ -201,23 +182,6 @@ in
       enable = true;
     };
 
-    xdg.configFile."fastfetch/ascii.txt".text = ''
-                $1,1C1
-              ,CC1
-        $2,;11i:;11i11;,
-      .tCGGGGGCCCGGGGt.
-      $3fGCCCCCCCCCCCCi
-      CCCCCCCCCCCCCC,
-      $4tGCCCCCCCCCCCCf,
-      ,CCCCCCCCCCCCCCG1
-       $5,LGCCCGGGCCCCGf.
-        .iLLLt11tLLf;
-    '';
-    programs.fastfetch = {
-      enable = true;
-      settings = builtins.fromJSON (builtins.readFile ./config/fastfetch/config.jsonc);
-    };
-
     programs.starship = {
       enable = true;
       enableTransience = true;
@@ -228,15 +192,6 @@ in
       enable = true;
       nix-direnv.enable = true;
     };
-
-    # programs.mise = {
-    #   enable = true;
-    #   globalConfig = {
-    #     tools = {
-    #       node = "lts";
-    #     };
-    #   };
-    # };
 
     programs.gpg = {
       enable = true;
@@ -261,7 +216,6 @@ in
         GOPATH = "${config.xdg.dataHome}/go";
         GOBIN = "${config.xdg.dataHome}/go/bin";
       };
-
     };
 
     programs.aria2 = {
@@ -273,37 +227,8 @@ in
     };
 
     programs.man = {
-      generateCaches = false;
+      generateCaches = true;
     };
-
-    xdg.configFile."captive-browser.toml".text = ''
-      browser = ${
-        lib.concatStringsSep " " [
-          ''"""''
-          ''open -n -W -a "Helium" --args''
-          ''--user-data-dir=${config.xdg.dataHome}/chromium-captive''
-          ''--proxy-server="socks5://$PROXY"''
-          ''--proxy-bypass-list="<-loopback>"''
-          ''--no-first-run''
-          ''--new-window''
-          ''--incognito''
-          ''--no-default-browser-check''
-          ''--no-crash-upload''
-          ''--disable-extensions''
-          ''--disable-sync''
-          ''--disable-background-networking''
-          ''--disable-client-side-phishing-detection''
-          ''--disable-component-update''
-          ''--disable-translate''
-          ''--disable-web-resources''
-          ''--safebrowsing-disable-auto-update''
-          ''http://detectportal.firefox.com/canonical.html''
-          ''"""''
-        ]
-      } 
-      dhcp-dns = "ipconfig getoption en0 domain_name_server"
-      socks5-addr = "localhost:11666"
-    '';
 
     gtk = {
       enable = true;
