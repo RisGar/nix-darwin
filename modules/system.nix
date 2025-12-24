@@ -138,4 +138,14 @@
     ];
   };
 
+  nix.settings.substituters = [
+    "https://nvim-treesitter-main.cachix.org"
+  ];
+  nix.settings.trusted-public-keys = [
+    "nvim-treesitter-main.cachix.org-1:cbwE6blfW5+BkXXyeAXoVSu1gliqPLHo2m98E4hWfZQ="
+  ];
+  nix.settings.trusted-users = [
+    "rishab"
+  ];
+
 }
