@@ -21,13 +21,13 @@
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
-    nvim-config = {
-      url = "git+file:///Users/rishab/Documents/Programming/nvim-config";
+    nixln-edit = {
+      url = "github:nlintn/nixln-edit";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixln-edit = {
-      url = "github:nlintn/nixln-edit";
+    nvim-config = {
+      url = "path:///Users/rishab/Documents/Programming/nvim-config";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -40,10 +40,6 @@
     #   url = "github:homebrew/homebrew-cask";
     #   flake = false;
     # };
-    # homebrew-numi = {
-    #   url = "https://github.com/nikolaeu/homebrew-numi";
-    #   flake = false;
-    # };
     # homebrew-sikarugir = {
     #   url = "https://github.com/Sikarugir-App/homebrew-sikarugir";
     #   flake = false;
@@ -51,16 +47,15 @@
   };
   outputs =
     {
-      nixpkgs,
-      home-manager,
-      nix-homebrew,
-      mlpreview,
-      nixln-edit,
-      nix-darwin,
+      # homebrew-cask,
       # homebrew-core,
       # homebrew-sikarugir,
-      # homebrew-numi,
-      # homebrew-cask,
+      home-manager,
+      mlpreview,
+      nix-darwin,
+      nix-homebrew,
+      nixln-edit,
+      nixpkgs,
       nvim-config,
       self,
       ...
@@ -79,6 +74,7 @@
           allowUnfree = true;
         };
       };
+      secrets = builtins.fromTOML (builtins.readFile ./secrets/secrets.toml);
     in
     {
       # Build darwin flake using:
@@ -122,7 +118,6 @@
               # taps = {
               #   "homebrew/homebrew-core" = homebrew-core;
               #   "homebrew/homebrew-cask" = homebrew-cask;
-              #   "nikolaeu/homebrew-numi" = homebrew-numi; # numi cli
               #   "sikarugir-app/homebrew-sikarugir" = homebrew-sikarugir;
               # };
               # mutableTaps = true;
@@ -132,6 +127,7 @@
         ];
         specialArgs = {
           inherit pkgs;
+          inherit secrets;
           inherit self;
         };
       };
