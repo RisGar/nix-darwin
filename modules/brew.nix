@@ -7,9 +7,9 @@
       cleanup = "zap";
     };
 
-    taps = [
-      "sikarugir-app/sikarugir"
-    ];
+    # taps = [
+    #   "sikarugir-app/sikarugir"
+    # ];
     # taps = builtins.attrNames config.nix-homebrew.taps;
 
     # `brew install`
@@ -32,7 +32,7 @@
       "pearcleaner"
       "qlmarkdown"
       "qlvideo"
-      "sikarugir-app/sikarugir/sikarugir"
+      # "sikarugir-app/sikarugir/sikarugir"
       "steam"
       "transmission-remote-gui"
       "zen"
@@ -44,6 +44,7 @@
       "affinity"
       "prusaslicer"
       "zoom"
+      "yubico-authenticator"
     ];
   };
 }
