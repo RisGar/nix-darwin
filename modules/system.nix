@@ -134,6 +134,7 @@
 
       monitoring_ui = {
         enabled = true;
+        enable_query_log = true;
       };
     };
 
