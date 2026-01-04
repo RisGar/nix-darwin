@@ -1,0 +1,7 @@
+{
+  linuxPkgs,
+  ...
+}:
+{
+  nixpkgs.pkgs = linuxPkgs;
+}

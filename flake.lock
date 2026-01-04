@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "base16-schemes": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767549648,
+        "narHash": "sha256-boJjGgrCC9pVlZ4PUVyWcvj+9gzDBe5D2rV2BbWP7YQ=",
+        "owner": "RisGar",
+        "repo": "base16-schemes",
+        "rev": "63e283f9ec6c88c685b994f81308aa5dc5ce191b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "RisGar",
+        "repo": "base16-schemes",
+        "type": "github"
+      }
+    },
     "brew-src": {
       "flake": false,
       "locked": {
@@ -44,16 +60,37 @@
         ]
       },
       "locked": {
-        "lastModified": 1760969839,
-        "narHash": "sha256-mLPYnEullt9hGTkhkYvKh/UXlezP1RCze+R5V+tt0E4=",
+        "lastModified": 1766961325,
+        "narHash": "sha256-5VaRCn+cb9UzSWidggGUUgcoak7b6hRp4e8RrDm3D/0=",
         "owner": "RisGar",
         "repo": "mlpreview",
-        "rev": "fa61ce880824f28044e7311b7ecdcfac17e9e9bd",
+        "rev": "4ee0d89eba182a959d1a3a916da46f10759e9081",
         "type": "github"
       },
       "original": {
         "owner": "RisGar",
         "repo": "mlpreview",
+        "type": "github"
+      }
+    },
+    "nix-colors": {
+      "inputs": {
+        "base16-schemes": [
+          "base16-schemes"
+        ],
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1707825078,
+        "narHash": "sha256-hTfge2J2W+42SZ7VHXkf4kjU+qzFqPeC9k66jAUBMHk=",
+        "owner": "misterio77",
+        "repo": "nix-colors",
+        "rev": "b01f024090d2c4fc3152cd0cf12027a7b8453ba1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "misterio77",
+        "repo": "nix-colors",
         "type": "github"
       }
     },
@@ -131,6 +168,22 @@
         "type": "github"
       }
     },
+    "nixos": {
+      "locked": {
+        "lastModified": 1767379071,
+        "narHash": "sha256-EgE0pxsrW9jp9YFMkHL9JMXxcqi/OoumPJYwf+Okucw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fb7944c166a3b630f177938e478f0378e64ce108",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1766532406,
@@ -144,6 +197,21 @@
         "owner": "NixOS",
         "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib": {
+      "locked": {
+        "lastModified": 1697935651,
+        "narHash": "sha256-qOfWjQ2JQSQL15KLh6D7xQhx0qgZlYZTYlcEiRuAMMw=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "e1e11fdbb01113d85c7f41cada9d2847660e3902",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
         "type": "github"
       }
     },
@@ -169,21 +237,20 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nvim-treesitter-main": "nvim-treesitter-main",
-        "plugins-nvim-dev-container": "plugins-nvim-dev-container"
+        "nvim-treesitter-main": "nvim-treesitter-main"
       },
       "locked": {
-        "lastModified": 1766600111,
-        "narHash": "sha256-YyIaPYrX6p0aSWUJhRc0ZrHSJWsGn8ItJAUVvwnU1Sk=",
-        "ref": "refs/heads/master",
-        "rev": "689e551fb3294beceb03fa0d5924f0b9c2965a69",
-        "revCount": 9,
-        "type": "git",
-        "url": "file:///Users/rishab/Documents/Programming/nvim-config"
+        "lastModified": 1767468377,
+        "narHash": "sha256-2vEQAX6rG7YkLT6V+AxhuMmisOhrBU8bjycdKRUbcS8=",
+        "owner": "RisGar",
+        "repo": "nvim-config",
+        "rev": "32230900cd9c0ecdc295cf3306f60be6ab352dcc",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///Users/rishab/Documents/Programming/nvim-config"
+        "owner": "RisGar",
+        "repo": "nvim-config",
+        "type": "github"
       }
     },
     "nvim-treesitter": {
@@ -240,29 +307,16 @@
         "type": "github"
       }
     },
-    "plugins-nvim-dev-container": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1763393325,
-        "narHash": "sha256-N2m4AxjvcBlnkkfujdoHx/QJpoA/BYOg/DWY7X8TQgI=",
-        "owner": "esensar",
-        "repo": "nvim-dev-container",
-        "rev": "59d85de531912c3def3061ae1d84c769e09a5653",
-        "type": "github"
-      },
-      "original": {
-        "owner": "esensar",
-        "repo": "nvim-dev-container",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
+        "base16-schemes": "base16-schemes",
         "home-manager": "home-manager",
         "mlpreview": "mlpreview",
+        "nix-colors": "nix-colors",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixln-edit": "nixln-edit",
+        "nixos": "nixos",
         "nixpkgs": "nixpkgs",
         "nvim-config": "nvim-config"
       }
