@@ -3,6 +3,7 @@
   lib,
   pkgs,
   nvim-config,
+  nix-colors,
   ...
 }:
 let
@@ -16,6 +17,9 @@ let
 in
 {
   imports = [
+    nvim-config.homeModule
+    nix-colors.homeManagerModules.default
+
     ./config/aerospace
     ./config/captive-browser
     ./config/eza
@@ -29,7 +33,6 @@ in
     ./config/ssh
     ./config/tmux
     ./config/zathura
-    nvim-config.homeModule
   ];
 
   options = {
@@ -64,13 +67,15 @@ in
     targets.darwin.linkApps.enable = true;
     targets.darwin.copyApps.enable = false;
 
-    home.preferXdgDirectories = true;
+    colorScheme = nix-colors.colorSchemes.onedark;
 
     home.packages =
       with pkgs;
       [
         # pcre2 # TODO: remove?
         # zulip-term # TODO: broken
+        git-crypt
+        devpod
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
@@ -121,13 +126,11 @@ in
         typst
         unison-ucm
         virt-viewer
-        vscode
         wakatime-cli
         xdg-ninja
         xz
         zotero
-      ]
-      ++ [
+        stirling-pdf
         raycast
         ice-bar-beta
       ]
@@ -227,7 +230,7 @@ in
     };
 
     programs.man = {
-      generateCaches = true;
+      generateCaches = false;
     };
 
     gtk = {

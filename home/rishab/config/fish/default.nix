@@ -10,6 +10,7 @@
   vars.autoStartFastfetch = true;
 
   xdg.enable = true;
+  home.preferXdgDirectories = true;
 
   home.shellAliases = {
     cp = "cp -i";
@@ -42,7 +43,7 @@
 
     LANG = "en_GB.UTF-8";
 
-    LS_COLORS = "1"; # TODO
+    # LS_COLORS = "1"; # TODO
 
     # Use neovim as default editor and manpager
     EDITOR = lib.getExe config.nvim.out.packages.nvim;
@@ -159,7 +160,7 @@
 
       lf = {
         wraps = "lf";
-        description = "lf - Terminal file manager (changing directory on exit)";
+        description = "lf wrapped with cd";
         body = "cd \"$(${lib.getExe config.programs.lf.package} -print-last-dir $argv)\"";
       };
 
@@ -172,10 +173,20 @@
       reload = {
         description = "Reloads nix-darwin";
         body = ''
-          sudo -i darwin-rebuild switch -I ${config.vars.systemFlake}
+          sudo -i darwin-rebuild switch -I ${config.vars.systemFlake} $argv
           ghostty +validate-config
           tmux source-file ~/.config/tmux/tmux.conf
           source ~/.config/fish/config.fish
+        '';
+      };
+
+      clear = {
+        wraps = "clear";
+        body = ''
+          command clear
+          if set TMUX
+            tmux clear-history
+          end
         '';
       };
 

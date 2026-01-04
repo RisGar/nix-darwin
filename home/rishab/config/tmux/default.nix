@@ -74,7 +74,7 @@ in
     enableTmuxIntegration = false; # TODO: custom prompt with nerd font instead of emojis via overlay
     settings = {
       default_session = {
-        preview_command = "${lib.getExe config.programs.eza.package} -aF --color=always --git --group-directories-first --icons {}";
+        preview_command = "${lib.getExe pkgs.mlpreview} {}";
         startup_command = "${config.home.sessionVariables.EDITOR} -c ':lua Snacks.picker.files(opts)'";
       };
 

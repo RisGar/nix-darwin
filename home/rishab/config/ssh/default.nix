@@ -11,7 +11,7 @@
     ];
     matchBlocks = {
       "*" = {
-        identityAgent = "\"~/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock\"";
+        identityAgent = "\"/Users/rishab/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock\"";
       };
 
       "gargnas" = {

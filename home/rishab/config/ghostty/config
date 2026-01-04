@@ -1,3 +1,4 @@
+# vim:set ft=conf
 theme = "Atom One Dark"
 bold-is-bright = true
 

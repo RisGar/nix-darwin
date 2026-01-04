@@ -1,22 +1,37 @@
-{ pkgs, self, ... }:
 {
+  darwinPkgs,
+  lib,
+  pkgs,
+  self,
+  secrets,
+  ...
+}:
+{
+  imports = [
+    ./brew.nix
+  ];
+
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
+
   nix.channel.enable = false;
 
   # User setup
   system.primaryUser = "rishab";
-  users.users."rishab".home = "/Users/rishab";
+  users.users."rishab" = {
+    name = "rishab";
+    home = "/Users/rishab";
+    shell = pkgs.fish;
+  };
 
   # Fish shell setup
   programs.fish.enable = true;
   environment.shells = [
     pkgs.fish
   ];
-  users.users."rishab".shell = pkgs.fish;
 
   # Use Touch ID or Apple Watch for sudo auth
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -89,7 +104,7 @@
     LaunchServices.LSQuarantine = true; # TODO: do i need quarantine
   };
 
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  nixpkgs.pkgs = darwinPkgs;
 
   time.timeZone = "Europe/Berlin";
 
@@ -135,12 +150,18 @@
       monitoring_ui = {
         enabled = true;
         enable_query_log = true;
+        listen_address = "127.0.0.1:2828";
+        username = "admin";
+        password = secrets.dnscrypt.password;
+        privacy_level = 1;
+        tls_certificate = "";
+        tls_key = "";
       };
     };
 
   };
 
-  launchd.daemons.dnscrypt-proxy.serviceConfig.UserName = pkgs.lib.mkForce "root";
+  launchd.daemons.dnscrypt-proxy.serviceConfig.UserName = lib.mkForce "root";
 
   networking = {
     knownNetworkServices = [

@@ -79,6 +79,9 @@
         "https://git.fs.tum.de" = {
           provider = "generic";
         };
+        "https://gitlab.lrz.de" = {
+          provider = "generic";
+        };
       };
     };
   };

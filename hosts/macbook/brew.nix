@@ -45,6 +45,8 @@
       "prusaslicer"
       "zoom"
       "yubico-authenticator"
+      "visual-studio-code"
+      "stirling-pdf"
     ];
   };
 }
