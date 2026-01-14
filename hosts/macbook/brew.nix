@@ -38,7 +38,6 @@
       "zen"
       "zulip"
       "spotify" # breaks often on nix
-      # "prismlauncher"
       "helium-browser"
       "xquartz" # TODO: make ssh -X via nix work
       "affinity"

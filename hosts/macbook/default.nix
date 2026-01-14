@@ -3,7 +3,6 @@
   lib,
   pkgs,
   self,
-  secrets,
   ...
 }:
 {
@@ -11,11 +10,30 @@
     ./brew.nix
   ];
 
+  nix = {
+    # linux-builder.enable = true;
+    settings = {
+      substituters = [
+        "https://nvim-treesitter-main.cachix.org"
+      ];
+      trusted-public-keys = [
+        "nvim-treesitter-main.cachix.org-1:cbwE6blfW5+BkXXyeAXoVSu1gliqPLHo2m98E4hWfZQ="
+      ];
+      trusted-users = [
+        "rishab"
+      ];
+    };
+  };
+
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
 
   # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+    "pipe-operators"
+  ];
 
   nix.channel.enable = false;
 
@@ -151,11 +169,7 @@
         enabled = true;
         enable_query_log = true;
         listen_address = "127.0.0.1:2828";
-        username = "admin";
-        password = secrets.dnscrypt.password;
         privacy_level = 1;
-        tls_certificate = "";
-        tls_key = "";
       };
     };
 
@@ -173,15 +187,5 @@
       "127.0.0.1"
     ];
   };
-
-  nix.settings.substituters = [
-    "https://nvim-treesitter-main.cachix.org"
-  ];
-  nix.settings.trusted-public-keys = [
-    "nvim-treesitter-main.cachix.org-1:cbwE6blfW5+BkXXyeAXoVSu1gliqPLHo2m98E4hWfZQ="
-  ];
-  nix.settings.trusted-users = [
-    "rishab"
-  ];
 
 }
