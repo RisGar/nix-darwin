@@ -6,16 +6,18 @@
       # homebrew-cask,
       # homebrew-core,
       # homebrew-sikarugir,
+      agenix,
+      disko,
       home-manager,
       mlpreview,
       nix-colors,
       nix-darwin,
       nix-homebrew,
       nixln-edit,
-      nixos,
       nixpkgs,
       nvim-config,
       self,
+      nix-rosetta-builder,
       ...
     }:
     let
@@ -34,7 +36,10 @@
         overlays = [ ];
         config = { };
       };
-      secrets = builtins.fromTOML (builtins.readFile ./secrets.toml);
+
+      lib = nixpkgs.lib;
+
+      secrets = import ./secrets lib;
     in
     {
       # Build darwin flake using:
@@ -42,10 +47,21 @@
       darwinConfigurations."Rishabs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = darwinPkgs.system;
         modules = [
+          nix-rosetta-builder.darwinModules.default
+          {
+            # see available options in module.nix's `options.nix-rosetta-builder`
+            nix-rosetta-builder.onDemand = true;
+          }
+
           ./hosts/macbook
 
-          home-manager.darwinModules.home-manager
-          nix-homebrew.darwinModules.nix-homebrew
+          home-manager.darwinModules.default
+          nix-homebrew.darwinModules.default
+
+          agenix.darwinModules.default
+          {
+            age.secrets = secrets;
+          }
 
           {
             home-manager = {
@@ -79,21 +95,26 @@
         ];
         specialArgs = {
           inherit darwinPkgs;
-          inherit secrets;
           inherit self;
         };
       };
 
-      nixosConfigurations."Rishabs-Homelab" = nixos.lib.nixosSystem {
+      nixosConfigurations."Rishabs-Homelab" = nixpkgs.lib.nixosSystem {
         system = linuxPkgs.system;
 
         modules = [
+          disko.nixosModules.default
+
+          agenix.nixosModules.default
+          {
+            age.secrets = secrets;
+          }
+
           ./hosts/homelab
         ];
 
         specialArgs = {
           inherit linuxPkgs;
-          inherit secrets;
           inherit self;
         };
       };
@@ -101,9 +122,6 @@
 
   inputs = {
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    };
-    nixos = {
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
     nix-darwin = {
@@ -127,7 +145,7 @@
     };
     nvim-config = {
       url = "github:RisGar/nvim-config";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     base16-schemes = {
       url = "github:RisGar/base16-schemes";
@@ -136,6 +154,18 @@
     nix-colors = {
       url = "github:misterio77/nix-colors";
       inputs.base16-schemes.follows = "base16-schemes";
+    };
+    nix-rosetta-builder = {
+      url = "github:cpick/nix-rosetta-builder";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Homebrew taps
