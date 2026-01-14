@@ -46,10 +46,10 @@ in
 
       bind a run-shell "${seshExe} connect \"$(
         ${seshExe} list --icons | ${lib.getExe config.programs.fzf.package} --tmux 80%,70% \
-          --no-sort --ansi --border-label ' sesh ' --prompt '󱐋  ' \
+          --no-sort --ansi --border-label ' sesh ' --prompt='󰘧  ' \
           --header '  󰘴a all 󰘴t tmux 󰘴g configs 󰘴x zoxide 󰘴d kill 󰘴f find' \
           --bind 'tab:down,btab:up' \
-          --bind 'ctrl-a:change-prompt(󱐋  )+reload(${seshExe} list --icons)' \
+          --bind 'ctrl-a:change-prompt(󰘧  )+reload(${seshExe} list --icons)' \
           --bind 'ctrl-t:change-prompt(  )+reload(${seshExe} list -t --icons)' \
           --bind 'ctrl-g:change-prompt(  )+reload(${seshExe} list -c --icons)' \
           --bind 'ctrl-x:change-prompt(󰉋  )+reload(${seshExe} list -z --icons)' \
