@@ -43,6 +43,11 @@
         user = "docker";
       };
 
+      "homelab" = {
+        hostname = "192.168.178.42";
+        user = "rishab";
+      };
+
       "valhalla" = {
         hostname = "valhalla.fs.tum.de";
         user = "garg";

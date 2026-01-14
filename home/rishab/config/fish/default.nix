@@ -27,6 +27,8 @@
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
 
     gbs = "podman run -it -v $(pwd):/home gitlab.lrz.de:5005/gbs-cm/docker-setup/gbs-arm64:latest";
+
+    reload-homelab = "nix run nixpkgs#nixos-rebuild switch -- --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab --sudo";
   };
 
   home.sessionPath = [
@@ -43,7 +45,7 @@
 
     LANG = "en_GB.UTF-8";
 
-    # LS_COLORS = "1"; # TODO
+    LS_COLORS = "1"; # TODO
 
     # Use neovim as default editor and manpager
     EDITOR = lib.getExe config.nvim.out.packages.nvim;
