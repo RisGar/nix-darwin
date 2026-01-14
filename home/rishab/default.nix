@@ -74,7 +74,6 @@ in
       [
         # pcre2 # TODO: remove?
         # zulip-term # TODO: broken
-        git-crypt
         devpod
         airdrop-cli
         babelfish
@@ -91,7 +90,7 @@ in
         http-server
         iina
         imagemagick
-        isabelle
+        # isabelle
         # julia-bin
         libqalculate
         llvmPackages_latest.clang
