@@ -4,6 +4,17 @@
   pkgs,
   ...
 }:
+let
+  fromYAML =
+    p:
+    builtins.fromJSON (
+      builtins.readFile (
+        pkgs.runCommand "from-yaml" {
+          nativeBuildInputs = [ pkgs.remarshal ];
+        } "remarshal -if yaml -i \"${p}\" -of json -o \"$out\""
+      )
+    );
+in
 {
   programs.git = {
     enable = true;
@@ -90,9 +101,10 @@
     enable = true;
   };
 
-  xdg.configFile."lazygit/config.yml".source = ./lazygit.yml;
+  # xdg.configFile."lazygit/config.yml".source = ./lazygit.yml;
   programs.lazygit = {
     enable = true;
+    settings = fromYAML ./lazygit.yml;
     # don't use settings as nix cannot natively read yaml files
   };
 

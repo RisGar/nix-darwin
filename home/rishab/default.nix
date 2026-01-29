@@ -4,14 +4,17 @@
   pkgs,
   nvim-config,
   nix-colors,
+  agenix,
+  nixln-edit,
+  mlpreview,
   ...
 }:
 let
-  ice-bar-beta = pkgs.ice-bar.overrideAttrs (oldAttrs: rec {
-    version = "0.11.13-dev.2";
+  ice-bar-beta = pkgs.ice-bar.overrideAttrs (oldAttrs: {
+    version = "0.11.13-dev.2h-unofficial";
     src = pkgs.fetchurl {
-      url = "https://github.com/jordanbaird/Ice/releases/download/${version}/Ice.zip";
-      hash = "sha256-wbuqcfYev+Xuko95CvYJY6nyAjZNY/eNLGs+xRBc9KA=";
+      url = "https://github.com/user-attachments/files/24932833/Ice.zip";
+      hash = "sha256-bfY5AOP0Anwf5wu0pVzj+WxzuJditvfuMRW+DmlZZOc=";
     };
   });
 in
@@ -69,11 +72,17 @@ in
 
     colorScheme = nix-colors.colorSchemes.onedark;
 
+    vars.mlpreview = mlpreview.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
     home.packages =
       with pkgs;
       [
         # pcre2 # TODO: remove?
         # zulip-term # TODO: broken
+        nixos-rebuild
+        agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
+        nixln-edit.packages.${pkgs.stdenv.hostPlatform.system}.default
+        config.vars.mlpreview
         devpod
         airdrop-cli
         babelfish
@@ -99,7 +108,6 @@ in
         luarocks
         man-pages
         man-pages-posix
-        mlpreview
         moonlight-qt
         mosh
         nixd
@@ -130,7 +138,13 @@ in
         xz
         zotero
         stirling-pdf
-        raycast
+        (raycast.overrideAttrs (oldAttrs: {
+          version = "1.104.3";
+          src = pkgs.fetchurl {
+            url = "https://releases.raycast.com/releases/${version}/download?build=arm";
+            hash = "sha256-bfY5AOP0Anwf5wu0pVzj+WxzuJditvfuMRW+DmlZZOc=";
+          };
+        }))
         ice-bar-beta
       ]
       ++

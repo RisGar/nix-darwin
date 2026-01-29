@@ -28,7 +28,8 @@
 
     gbs = "podman run -it -v $(pwd):/home gitlab.lrz.de:5005/gbs-cm/docker-setup/gbs-arm64:latest";
 
-    reload-homelab = "nix run nixpkgs#nixos-rebuild switch -- --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab --sudo";
+    reload-homelab = "${lib.getExe pkgs.nixos-rebuild} switch --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab.internal --sudo";
+    reload-homelab-local = "${lib.getExe pkgs.nixos-rebuild} switch --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab --sudo";
   };
 
   home.sessionPath = [
@@ -42,6 +43,7 @@
 
   home.sessionVariables = {
     XDG_BIN_HOME = "$HOME/.local/bin";
+    XDG_RUNTIME_DIR = "$TMPDIR";
 
     LANG = "en_GB.UTF-8";
 
@@ -81,6 +83,8 @@
     ## C(++) compilers
     CC = lib.getExe pkgs.llvmPackages_latest.clang;
     CXX = lib.getExe pkgs.llvmPackages_latest.clang + "++";
+
+    WAYLAND_DISPLAY = "wayland-0";
   };
 
   home.sessionSearchVariables = {

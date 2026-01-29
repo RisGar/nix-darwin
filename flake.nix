@@ -21,49 +21,29 @@
       ...
     }:
     let
-      darwinPkgs = import nixpkgs rec {
-        system = "aarch64-darwin";
-        overlays = [
-          mlpreview.overlays.default
-          (final: prev: { nixln-edit = nixln-edit.packages.${system}.default; })
-        ];
-        config = {
-          allowUnfree = true;
-        };
-      };
-      linuxPkgs = import nixpkgs {
-        system = "x86_64-linux";
-        overlays = [ ];
-        config = { };
-      };
-
       lib = nixpkgs.lib;
-
       secrets = import ./secrets lib;
     in
     {
       # Build darwin flake using:
       # $ sudo -i darwin-rebuild build --flake .#Rishabs-MacBook-Pro
       darwinConfigurations."Rishabs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = darwinPkgs.system;
+        system = "aarch64-darwin";
+
         modules = [
           nix-rosetta-builder.darwinModules.default
-          {
-            # see available options in module.nix's `options.nix-rosetta-builder`
-            nix-rosetta-builder.onDemand = true;
-          }
+          home-manager.darwinModules.default
+          nix-homebrew.darwinModules.default
+          agenix.darwinModules.default
 
           ./hosts/macbook
 
-          home-manager.darwinModules.default
-          nix-homebrew.darwinModules.default
-
-          agenix.darwinModules.default
           {
             age.secrets = secrets;
-          }
 
-          {
+            # see available options in module.nix's `options.nix-rosetta-builder`
+            nix-rosetta-builder.onDemand = true;
+
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
@@ -71,8 +51,13 @@
               backupFileExtension = "bak";
 
               extraSpecialArgs = {
-                inherit nvim-config;
-                inherit nix-colors;
+                inherit
+                  nvim-config
+                  nix-colors
+                  agenix
+                  nixln-edit
+                  mlpreview
+                  ;
               };
             };
 
@@ -94,27 +79,25 @@
 
         ];
         specialArgs = {
-          inherit darwinPkgs;
           inherit self;
         };
       };
 
-      nixosConfigurations."Rishabs-Homelab" = nixpkgs.lib.nixosSystem {
-        system = linuxPkgs.system;
+      nixosConfigurations."Rishabs-Homelab" = lib.nixosSystem {
 
         modules = [
           disko.nixosModules.default
-
           agenix.nixosModules.default
+
+          ./hosts/homelab
+
           {
             age.secrets = secrets;
           }
 
-          ./hosts/homelab
         ];
 
         specialArgs = {
-          inherit linuxPkgs;
           inherit self;
         };
       };

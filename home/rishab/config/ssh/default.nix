@@ -6,12 +6,9 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    includes = [
-      # "${config.xdg.configHome}/colima/ssh_config"
-    ];
     matchBlocks = {
       "*" = {
-        identityAgent = "\"/Users/rishab/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock\"";
+        identityAgent = "\"~/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock\"";
       };
 
       "gargnas" = {
@@ -56,6 +53,11 @@
       "itsec" = {
         hostname = "sandkasten.sec.in.tum.de";
         user = "team-263";
+      };
+
+      "pangolin" = {
+        hostname = "85.215.138.48";
+        user = "root";
       };
     };
   };

@@ -15,4 +15,16 @@ in
     rishabs-macbook
     rishabs-homelab
   ];
+  "cloudflare.age".publicKeys = [
+    rishabs-macbook
+    rishabs-homelab
+  ];
+  "pangolin.age".publicKeys = [
+    rishabs-macbook
+    rishabs-homelab
+  ];
+  "newt.age".publicKeys = [
+    rishabs-macbook
+    rishabs-homelab
+  ];
 }
