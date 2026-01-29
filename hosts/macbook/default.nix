@@ -1,5 +1,4 @@
 {
-  darwinPkgs,
   lib,
   pkgs,
   self,
@@ -122,7 +121,19 @@
     LaunchServices.LSQuarantine = true; # TODO: do i need quarantine
   };
 
-  nixpkgs.pkgs = darwinPkgs;
+  # nixpkgs.pkgs = import <nixpkgs> {
+  #   system = "aarch64-darwin";
+  #   config = {
+  #     allowUnfree = true;
+  #     allowBroken = true;
+  #   };
+  # };
+
+  nixpkgs.config = {
+    allowBroken = true;
+    allowUnfree = true;
+  };
+  # nixpkgs.hostPlatform = "aarch64-darwin";
 
   time.timeZone = "Europe/Berlin";
 
@@ -168,7 +179,7 @@
       monitoring_ui = {
         enabled = true;
         enable_query_log = true;
-        listen_address = "127.0.0.1:2828";
+        listen_address = "127.0.0.1:6969";
         privacy_level = 1;
       };
     };

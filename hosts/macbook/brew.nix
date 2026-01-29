@@ -46,6 +46,7 @@
       "yubico-authenticator"
       "visual-studio-code"
       "stirling-pdf"
+      "tunnelblick"
     ];
   };
 }
