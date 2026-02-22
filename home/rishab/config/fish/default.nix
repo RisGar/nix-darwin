@@ -2,12 +2,14 @@
   pkgs,
   lib,
   config,
+  nvim-config,
   ...
 }:
-
+let
+  autoStartTmux = true;
+  autoStartFastfetch = false;
+in
 {
-  vars.autoStartTmux = true;
-  vars.autoStartFastfetch = true;
 
   xdg.enable = true;
   home.preferXdgDirectories = true;
@@ -23,13 +25,12 @@
     nixrepl = "nix repl --expr '{inherit (import <nixpkgs> {}) pkgs lib;}'";
     flakerepl = "nix repl --expr 'builtins.getFlake \"${config.vars.systemFlake}\"'";
 
-    trash = "trash -F";
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
 
     gbs = "podman run -it -v $(pwd):/home gitlab.lrz.de:5005/gbs-cm/docker-setup/gbs-arm64:latest";
 
-    reload-homelab = "${lib.getExe pkgs.nixos-rebuild} switch --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab.internal --sudo";
-    reload-homelab-local = "${lib.getExe pkgs.nixos-rebuild} switch --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab --sudo";
+    reload-homelab = "${lib.getExe pkgs.nixos-rebuild} switch --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host homelab --sudo";
+    reload-homelab-local = "${lib.getExe pkgs.nixos-rebuild} switch --flake ${config.vars.systemFlake}#Rishabs-Homelab --target-host 192.168.178.42 --sudo";
   };
 
   home.sessionPath = [
@@ -50,9 +51,9 @@
     LS_COLORS = "1"; # TODO
 
     # Use neovim as default editor and manpager
-    EDITOR = lib.getExe config.nvim.out.packages.nvim;
-    VISUAL = lib.getExe config.nvim.out.packages.nvim;
-    MANPAGER = lib.getExe config.nvim.out.packages.nvim + " +Man!";
+    EDITOR = lib.getExe nvim-config.packages.${pkgs.stdenv.system}.default;
+    VISUAL = lib.getExe nvim-config.packages.${pkgs.stdenv.system}.default;
+    MANPAGER = lib.getExe nvim-config.packages.${pkgs.stdenv.system}.default + " +Man!";
 
     PAGER = lib.getExe pkgs.ov;
 
@@ -85,6 +86,9 @@
     CXX = lib.getExe pkgs.llvmPackages_latest.clang + "++";
 
     WAYLAND_DISPLAY = "wayland-0";
+
+    CONTEXT7_API_KEY = "$(cat \"${config.age.secrets.context7.path}\")";
+    TAVILY_API_KEY = "$(cat \"${config.age.secrets.tavily.path}\")";
   };
 
   home.sessionSearchVariables = {
@@ -130,7 +134,7 @@
     '';
 
     # Autostart tmux if enabled
-    shellInitLast = lib.optionalString config.vars.autoStartTmux ''
+    shellInitLast = lib.optionalString autoStartTmux ''
       if status is-interactive
       and not set -q TMUX
         exec tmux new -As0
@@ -151,18 +155,18 @@
         '';
       };
 
-      git_clone_and_cd = {
-        description = "Git clones a repo and cds into it";
-        body = ''
-          git clone $argv[1]
-          if test $status -eq 0
-            set repo (basename $argv[1] .git)
-            z $repo
-            z ..
-            sesh connect $repo
-          end
-        '';
-      };
+      # git_clone_and_cd = {
+      #   description = "Git clones a repo and cds into it";
+      #   body = ''
+      #     git clone $argv[1]
+      #     if test $status -eq 0
+      #       set repo (basename $argv[1] .git)
+      #       z $repo
+      #       z ..
+      #       sesh connect $repo
+      #     end
+      #   '';
+      # };
 
       lf = {
         wraps = "lf";
@@ -198,7 +202,7 @@
 
       # Fastfetch on greeting
       fish_greeting = {
-        body = if config.vars.autoStartFastfetch then lib.getExe config.programs.fastfetch.package else "";
+        body = if autoStartFastfetch then lib.getExe config.programs.fastfetch.package else "";
       };
 
       # Starship transient prompts
@@ -228,7 +232,7 @@
       };
     };
     shellAbbrs = {
-      gc = "git_clone_and_cd";
+      gc = "sesh clone";
     };
     plugins = [
       {
