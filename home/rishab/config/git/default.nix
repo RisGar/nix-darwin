@@ -7,22 +7,21 @@
 let
   fromYAML =
     p:
-    builtins.fromJSON (
-      builtins.readFile (
-        pkgs.runCommand "from-yaml" {
-          nativeBuildInputs = [ pkgs.remarshal ];
-        } "remarshal -if yaml -i \"${p}\" -of json -o \"$out\""
-      )
-    );
+    builtins.fromJSON
+    <| builtins.readFile
+    <| pkgs.runCommand "from-yaml" {
+      nativeBuildInputs = [ pkgs.remarshal ];
+    } "remarshal -if yaml -i \"${p}\" -of json -o \"$out\"";
 in
 {
   programs.git = {
     enable = true;
 
     signing = {
-      key = "7EC2233FD90AF4F1";
+      key = "9ADCCDF12AEBD8B8";
       signByDefault = true;
       format = "openpgp";
+      signer = lib.getExe config.programs.gpg.package;
     };
 
     lfs.enable = true;
@@ -30,8 +29,10 @@ in
     settings = {
       user = {
         name = "Rishab Garg";
-        email = "me@rishab-garg.me";
+        email = "mail@rishab-garg.de";
       };
+
+      gpg.program = lib.getExe config.programs.gpg.package;
 
       core = {
         editor = "nvim";
@@ -72,18 +73,15 @@ in
       };
 
       pull = {
-        rebase = false;
+        rebase = true;
       };
 
       init = {
-        defaultBranch = "master";
+        defaultBranch = "main";
       };
 
       credential = {
         helper = lib.getExe pkgs.git-credential-manager;
-        # "https://artemis.cit.tum.de" = {
-        #   provider = "generic";
-        # };
         "https://artemis.tum.de" = {
           provider = "generic";
         };
@@ -105,7 +103,6 @@ in
   programs.lazygit = {
     enable = true;
     settings = fromYAML ./lazygit.yml;
-    # don't use settings as nix cannot natively read yaml files
   };
 
   programs.gh = {
