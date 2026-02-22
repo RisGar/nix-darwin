@@ -21,11 +21,12 @@ let
     "homarr"
     "cloudflared"
     "openrouter"
+    "openclaw"
   ];
 in
-secrets
-|> builtins.map (secret: {
+builtins.listToAttrs
+<| map (secret: {
   name = secret + ".age";
   value.publicKeys = keys;
 })
-|> builtins.listToAttrs
+<| secrets
