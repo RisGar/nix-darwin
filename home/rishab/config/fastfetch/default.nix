@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ ... }:
 {
   xdg.configFile."fastfetch/ascii.txt".text = ''
               $1,1C1
