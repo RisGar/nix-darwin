@@ -1,30 +1,43 @@
 {
-  config,
-  lib,
-  pkgs,
-  nvim-config,
-  nix-colors,
   agenix,
-  nixln-edit,
+  config,
+  direnv-instant,
+  lib,
   mlpreview,
+  nix-colors,
+  nixln-edit,
+  nvim-config,
+  ocrtool-mcp,
+  pkgs,
+  secrets,
   ...
 }:
 let
-  ice-bar-beta = pkgs.ice-bar.overrideAttrs (oldAttrs: {
-    version = "0.11.13-dev.2h-unofficial";
-    src = pkgs.fetchurl {
-      url = "https://github.com/user-attachments/files/24932833/Ice.zip";
-      hash = "sha256-bfY5AOP0Anwf5wu0pVzj+WxzuJditvfuMRW+DmlZZOc=";
-    };
-  });
+  thaw = pkgs.callPackage ../../pkgs/thaw.nix { };
+  whatsapp = (
+    pkgs.whatsapp-for-mac.overrideAttrs (
+      final: prev: {
+        version = "2.26.7.19";
+        src = pkgs.fetchzip {
+          extension = "zip";
+          name = "WhatsApp.app";
+          url = "https://web.whatsapp.com/desktop/mac_native/release/?version=${final.version}&extension=zip&configuration=Release&branch=master";
+          hash = "sha256-czWO+Z0HQt1vdMlGLnBq7hDh/qNXFwRAqABYfyqsQWc=";
+        };
+      }
+    )
+  );
+
 in
 {
   imports = [
-    nvim-config.homeModule
+    agenix.homeManagerModules.default
     nix-colors.homeManagerModules.default
+    nvim-config.homeModules.default
+    direnv-instant.homeModules.direnv-instant
 
     ./config/aerospace
-    ./config/captive-browser
+    ./config/captive-browser # TODO: replace with dnscypt proxy forwarding of firefox default captive portal getter site
     ./config/eza
     ./config/fastfetch
     ./config/fish
@@ -60,37 +73,36 @@ in
     # Let Home Manager install and manage itself.
     programs.home-manager.enable = true;
 
-    # vars.system = "aarch64-darwin";
-
-    nix.gc.automatic = true;
-
-    vars.systemFlake = "/private/etc/nix-darwin";
-
     # old behaviour of linking instead of copying into Applications folder
     targets.darwin.linkApps.enable = true;
     targets.darwin.copyApps.enable = false;
 
+    age = {
+      inherit secrets;
+      identityPaths = [ (config.home.homeDirectory + "/.ssh/agenix") ];
+    };
+
     colorScheme = nix-colors.colorSchemes.onedark;
 
+    vars.systemFlake = "/private/etc/nix-darwin";
     vars.mlpreview = mlpreview.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    vars.agenix = agenix.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    vars.nixln-edit = nixln-edit.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     home.packages =
       with pkgs;
       [
         # pcre2 # TODO: remove?
         # zulip-term # TODO: broken
-        nixos-rebuild
-        agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
-        nixln-edit.packages.${pkgs.stdenv.hostPlatform.system}.default
-        config.vars.mlpreview
-        devpod
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
         bear
         captive-browser
+        cinny-desktop
         clipboard-jh
-        devcontainer
+        config.vars.agenix
+        config.vars.mlpreview
         doomrunner
         ffmpeg
         git-credential-manager
@@ -99,24 +111,24 @@ in
         http-server
         iina
         imagemagick
-        # isabelle
-        # julia-bin
+        isabelle
+        julia-bin
         libqalculate
         llvmPackages_latest.clang
         llvmPackages_latest.clang-manpages
         localsend
+        logseq
         luarocks
         man-pages
         man-pages-posix
         moonlight-qt
         mosh
+        nix-tree
         nixd
         nixfmt
-        nixln-edit
-        nodejs
+        nixos-rebuild
         numi
         obsidian # TODO: home manager
-        opencode
         ov
         papers
         pkgconf
@@ -124,28 +136,23 @@ in
         podman-compose
         presenterm
         prismlauncher
+        raycast
         rustup
         shottr
+        stirling-pdf
         suspicious-package
         terminal-notifier
+        thaw
         tlrc # tldr rust client
         tokei
         typst
         unison-ucm
         virt-viewer
         wakatime-cli
+        whatsapp
         xdg-ninja
         xz
         zotero
-        stirling-pdf
-        (raycast.overrideAttrs (oldAttrs: {
-          version = "1.104.3";
-          src = pkgs.fetchurl {
-            url = "https://releases.raycast.com/releases/${version}/download?build=arm";
-            hash = "sha256-bfY5AOP0Anwf5wu0pVzj+WxzuJditvfuMRW+DmlZZOc=";
-          };
-        }))
-        ice-bar-beta
       ]
       ++
         # Fonts
@@ -190,7 +197,7 @@ in
       enable = true;
       config = {
         theme = "TwoDark";
-        pager = "${lib.getExe pkgs.ov} -F -H3";
+        pager = "${lib.getExe pkgs.ov} -F -H4";
       };
     };
 
@@ -208,10 +215,13 @@ in
       enable = true;
       nix-direnv.enable = true;
     };
+    # TODO:
+    # programs.direnv-instant = {
+    #   enable = true;
+    # };
 
     programs.gpg = {
       enable = true;
-      homedir = "${config.xdg.dataHome}/gnupg";
     };
 
     programs.ripgrep = {
@@ -219,10 +229,6 @@ in
     };
 
     programs.jq = {
-      enable = true;
-    };
-
-    programs.opam = {
       enable = true;
     };
 
@@ -240,6 +246,23 @@ in
 
     programs.vesktop = {
       enable = true;
+      # https://github.com/NixOS/nixpkgs/issues/484618
+      package = pkgs.vesktop.overrideAttrs (old: {
+        buildPhase = ''
+          runHook preBuild
+
+          pnpm build
+          pnpm exec electron-builder \
+            --dir \
+            -c.asarUnpack="**/*.node" \
+            -c.electronDist=. \
+            -c.electronVersion=${pkgs.electron.version} \
+            -c.mac.identity=null
+
+          runHook postBuild
+        '';
+      });
+
     };
 
     programs.man = {
@@ -252,5 +275,33 @@ in
     };
 
     xdg.configFile."ghostty/config".text = builtins.readFile ./config/ghostty/config;
+
+    programs.mcp = {
+      enable = true;
+      servers = {
+        context7 = {
+          url = "https://mcp.context7.com/mcp";
+          headers = {
+            CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
+          };
+        };
+        tavily = {
+          url = "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}";
+        };
+        ocrtool = {
+          command = lib.getExe ocrtool-mcp.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        };
+      };
+    };
+
+    programs.opencode = {
+      enable = true;
+      enableMcpIntegration = true;
+      settings = builtins.fromJSON <| builtins.readFile ./config/opencode/opencode.json;
+    };
+
+    services.ollama = {
+      enable = true;
+    };
   };
 }
