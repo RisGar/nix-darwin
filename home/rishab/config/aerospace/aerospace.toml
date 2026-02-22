@@ -122,8 +122,8 @@ cmd-ctrl-alt-j = "move down"
 cmd-ctrl-alt-k = "move up"
 cmd-ctrl-alt-l = "move right"
 # See: https://nikitabobko.github.io/AeroSpace/commands#resize
-cmd-ctrl-alt-shift-left = "resize smart -50"
-cmd-ctrl-alt-shift-right = "resize smart +50"
+cmd-ctrl-alt-shift-up = "resize smart -50"
+cmd-ctrl-alt-shift-down = "resize smart +50"
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 cmd-ctrl-alt-shift-1 = "workspace 1"
 cmd-ctrl-alt-shift-2 = "workspace 2"
@@ -137,26 +137,32 @@ cmd-ctrl-alt-4 = "move-node-to-workspace 4"
 cmd-ctrl-alt-w = "move-node-to-workspace w"
 cmd-ctrl-alt-t = "move-node-to-workspace t"
 cmd-ctrl-alt-d = "move-node-to-workspace d"
+cmd-ctrl-alt-c = "move-node-to-workspace c"
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 cmd-ctrl-alt-shift-tab = "workspace-back-and-forth"
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
 cmd-ctrl-alt-tab = "move-workspace-to-monitor --wrap-around next"
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 cmd-ctrl-alt-shift-s = "mode service"
-# Obsidian
+# Terminal
 cmd-ctrl-alt-shift-t = [
   "exec-and-forget open /Applications/Ghostty.app",
   "workspace t",
 ]
-# Web Browser
+# Zen (Web) 
 cmd-ctrl-alt-shift-w = [
   "exec-and-forget open '/Applications/Zen Browser.app'",
   "workspace w",
 ]
-# Terminal
+# Obsidian (Docs)
 cmd-ctrl-alt-shift-d = [
-  "exec-and-forget open /Applications/Obsidian.app",
+  "exec-and-forget open '~/Applications/Home Manager Apps/Obsidian.app'",
   "workspace d",
+]
+# Logseq (Content)
+cmd-ctrl-alt-shift-c = [
+  "exec-and-forget open '~/Applications/Home Manager Apps/Logseq.app'",
+  "workspace c",
 ]
 
 # 'service' binding mode declaration.
