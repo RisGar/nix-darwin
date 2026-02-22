@@ -12,11 +12,10 @@
     jdk25
   ];
 
-  home.activation = builtins.listToAttrs (
-    builtins.map (jdk: {
-
-      name = "java-${lib.versions.major jdk.version}";
-      value = (
+  home.activation = lib.listToAttrs (
+    lib.map (
+      jdk:
+      lib.nameValuePair "java-${lib.versions.major jdk.version}" (
         lib.hm.dag.entryAfter [ "writeBoundary" ] (
           lib.concatStringsSep " " [
             "run ln -sf $VERBOSE_ARG"
@@ -26,8 +25,8 @@
             ("/Library/Java/JavaVirtualMachines/zulu-" + (lib.versions.major jdk.version) + ".jdk/")
           ]
         )
-      );
-    }) config.vars.jdks
+      )
+    ) config.vars.jdks
   );
 
   home.sessionVariables = {
