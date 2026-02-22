@@ -3,10 +3,10 @@
 
   outputs =
     {
-      # homebrew-cask,
-      # homebrew-core,
-      # homebrew-sikarugir,
+      homebrew-cask,
+      homebrew-core,
       agenix,
+      direnv-instant,
       disko,
       home-manager,
       mlpreview,
@@ -17,7 +17,9 @@
       nixpkgs,
       nvim-config,
       self,
-      nix-rosetta-builder,
+      virby,
+      nix-openclaw,
+      ocrtool-mcp,
       ...
     }:
     let
@@ -28,10 +30,8 @@
       # Build darwin flake using:
       # $ sudo -i darwin-rebuild build --flake .#Rishabs-MacBook-Pro
       darwinConfigurations."Rishabs-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-
         modules = [
-          nix-rosetta-builder.darwinModules.default
+          virby.darwinModules.default
           home-manager.darwinModules.default
           nix-homebrew.darwinModules.default
           agenix.darwinModules.default
@@ -41,9 +41,6 @@
           {
             age.secrets = secrets;
 
-            # see available options in module.nix's `options.nix-rosetta-builder`
-            nix-rosetta-builder.onDemand = true;
-
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
@@ -52,11 +49,14 @@
 
               extraSpecialArgs = {
                 inherit
-                  nvim-config
-                  nix-colors
+                  secrets
                   agenix
+                  direnv-instant
+                  nix-colors
                   nixln-edit
+                  nvim-config
                   mlpreview
+                  ocrtool-mcp
                   ;
               };
             };
@@ -67,12 +67,10 @@
               user = "rishab";
               autoMigrate = true;
               # Declarative tap management
-              # TODO: can I make this work without uninstalling homebrew?
-              # taps = {
-              #   "homebrew/homebrew-core" = homebrew-core;
-              #   "homebrew/homebrew-cask" = homebrew-cask;
-              #   "sikarugir-app/homebrew-sikarugir" = homebrew-sikarugir;
-              # };
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+              };
               # mutableTaps = true;
             };
           }
@@ -84,21 +82,19 @@
       };
 
       nixosConfigurations."Rishabs-Homelab" = lib.nixosSystem {
-
         modules = [
           disko.nixosModules.default
           agenix.nixosModules.default
+          nix-openclaw.nixosModules.openclaw-gateway
 
           ./hosts/homelab
 
           {
             age.secrets = secrets;
           }
-
         ];
-
         specialArgs = {
-          inherit self;
+          inherit nix-openclaw;
         };
       };
     };
@@ -128,7 +124,7 @@
     };
     nvim-config = {
       url = "github:RisGar/nvim-config";
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     base16-schemes = {
       url = "github:RisGar/base16-schemes";
@@ -138,8 +134,8 @@
       url = "github:misterio77/nix-colors";
       inputs.base16-schemes.follows = "base16-schemes";
     };
-    nix-rosetta-builder = {
-      url = "github:cpick/nix-rosetta-builder";
+    virby = {
+      url = "github:quinneden/virby-nix-darwin/be170bd7ef21ce9773e7daa646d43f5405a1bdb2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
@@ -150,19 +146,28 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    direnv-instant = {
+      url = "github:Mic92/direnv-instant";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.home-manager.follows = "home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ocrtool-mcp = {
+      url = "github:RisGar/ocrtool-mcp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Homebrew taps
-    # homebrew-core = {
-    #   url = "github:homebrew/homebrew-core";
-    #   flake = false;
-    # };
-    # homebrew-cask = {
-    #   url = "github:homebrew/homebrew-cask";
-    #   flake = false;
-    # };
-    # homebrew-sikarugir = {
-    #   url = "https://github.com/Sikarugir-App/homebrew-sikarugir";
-    #   flake = false;
-    # };
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
   };
 }
