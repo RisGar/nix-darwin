@@ -22,7 +22,7 @@
       p = "paste";
     };
     commands = {
-      trash = "%trash -F $fx";
+      trash = "%trash $fx";
       copy-path = "$printf '%s' \"$fx\" | pbcopy";
       q = "quit";
       make-exec = "%chmod 755 $f && lf -remote \"send $id reload\"";
