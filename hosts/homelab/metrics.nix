@@ -1,15 +1,32 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 {
   services.grafana = {
     enable = true;
-    openFirewall = true;
     settings = {
       server = {
         http_addr = "127.0.0.1";
         http_port = 3000;
         enable_gzip = true;
-        root_url = "https://metrics.homelab.rishab-garg.me/";
+        root_url = "https://metrics.rishab.org";
       };
+
+      # auth.disable_login_form = true;
+
+      "auth.generic_oauth" = {
+        enabled = true;
+        allow_sign_up = true;
+        # auto_login = true; name = "Pocket ID";
+        client_id = "9f9c6b4a-d46a-43ab-9a24-f376a0669a74";
+        client_secret = "sApCPrSDjHXX7IJtD7Z3JDS2WL5KepsA";
+        scopes = "openid profile email groups";
+        auth_url = "${config.services.pocket-id.settings.APP_URL}/authorize";
+        token_url = "${config.services.pocket-id.settings.APP_URL}/api/oidc/token";
+        api_url = "${config.services.pocket-id.settings.APP_URL}/api/oidc/userinfo";
+        login_attribute_path = "preferred_username";
+        role_attribute_path = "contains(groups, 'admin') && 'Admin' || 'Viewer'";
+      };
+
+      "auth.anonymous".enabled = true;
 
       analytics.reporting_enabled = false;
     };

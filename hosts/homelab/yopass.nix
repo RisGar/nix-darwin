@@ -7,7 +7,7 @@
   virtualisation.oci-containers.containers.yopass = {
     image = "jhaals/yopass";
     environment = {
-      TRUSTED_PROXIES = "pass.homelab.rishab-garg.me";
+      TRUSTED_PROXIES = "pass.rishab.org";
       PORT = "8282";
       DISABLE_FEATURES = "true";
       DISABLE_UPLOAD = "true";
