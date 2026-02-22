@@ -10,18 +10,24 @@
   ];
 
   nix = {
-    # linux-builder.enable = true;
     settings = {
-      substituters = [
-        "https://nvim-treesitter-main.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nvim-treesitter-main.cachix.org-1:cbwE6blfW5+BkXXyeAXoVSu1gliqPLHo2m98E4hWfZQ="
-      ];
       trusted-users = [
         "rishab"
       ];
     };
+  };
+
+  nix.linux-builder.enable = false;
+
+  services.virby = {
+    enable = true;
+    cores = 4;
+    onDemand = {
+      enable = true;
+      ttl = 30; # in mins
+    };
+    rosetta = true;
+    debug = true;
   };
 
   # Set Git commit hash for darwin-version.
@@ -133,7 +139,8 @@
     allowBroken = true;
     allowUnfree = true;
   };
-  # nixpkgs.hostPlatform = "aarch64-darwin";
+  nixpkgs.hostPlatform = "aarch64-darwin";
+  nixpkgs.overlays = [ ];
 
   time.timeZone = "Europe/Berlin";
 
@@ -174,7 +181,7 @@
         };
       };
 
-      forwarding_rules = ./forwarding-rules.conf;
+      forwarding_rules = ../common/forwarding-rules.conf;
 
       monitoring_ui = {
         enabled = true;
