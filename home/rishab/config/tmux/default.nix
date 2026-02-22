@@ -79,12 +79,17 @@ in
 
       session = [
         {
-          name = "Notes 󰎞 ";
-          path = "~/Documents/Notes";
-        }
-        {
           name = "Nix 󱄅 ";
           path = config.vars.systemFlake;
+        }
+        {
+          name = "Notes 󰎞 ";
+          path = "${config.home.homeDirectory}/Documents/Notes";
+
+        }
+        {
+          name = "Second Brain  ";
+          path = "${config.home.homeDirectory}/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/Second Brain";
         }
       ];
     };
