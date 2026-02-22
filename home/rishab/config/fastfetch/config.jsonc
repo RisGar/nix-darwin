@@ -22,7 +22,7 @@
       "type": "packages",
       "key": "󰏓 PKGS",
       "keyColor": "yellow",
-      "format": "nix: {43} – {9}/{10}/{11} + brew: {45} – {17}/{18}"
+      "format": "nix {9}/{10}/{11} + brew {17}/{18}"
     },
     {
       "type": "shell",
