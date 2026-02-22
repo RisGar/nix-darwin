@@ -12,7 +12,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   src = fetchurl {
     url = "https://github.com/stonerl/Thaw/releases/download/${finalAttrs.version}/Thaw_${finalAttrs.version}.zip";
-    hash = "sha256-tYDGGdIRsS2V5xQVAdua9n7tP0LosZVcbqK0uE1b/uA=";
+    hash = "sha256-uTjrCR2cWHLEpnA2OS8aOx5a4OyFAe1aljaBjp8CcDA=";
   };
 
   sourceRoot = ".";
