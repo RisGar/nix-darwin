@@ -1,5 +1,4 @@
 {
-  config,
   ...
 }:
 {
@@ -11,12 +10,7 @@
         identityAgent = "\"~/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock\"";
       };
 
-      "gargnas" = {
-        hostname = "192.168.178.85";
-        user = "Rishab";
-        port = 223;
-      };
-
+      # TODO
       "hostinger" = {
         hostname = "89.117.169.136";
         user = "u797478303";
@@ -25,23 +19,29 @@
         serverAliveInterval = 240;
       };
 
+      "gargnas" = {
+        hostname = "gargnas.internal";
+        user = "Rishab";
+        port = 223;
+      };
+
       "lxhalle" = {
         hostname = "lxhalle.cit.tum.de";
         user = "gargr";
       };
 
       "proxmox" = {
-        hostname = "192.168.178.25";
+        hostname = "proxmox.internal";
         user = "root";
       };
 
-      "debian-docker" = {
-        hostname = "192.168.178.28";
+      "debian" = {
+        hostname = "debian.internal";
         user = "docker";
       };
 
       "homelab" = {
-        hostname = "192.168.178.42";
+        hostname = "homelab.internal";
         user = "rishab";
       };
 
