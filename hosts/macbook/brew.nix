@@ -1,4 +1,4 @@
-{ ... }:
+{ config, lib, ... }:
 {
   homebrew = {
     enable = true;
@@ -7,20 +7,10 @@
       cleanup = "zap";
     };
 
-    # taps = [
-    #   "sikarugir-app/sikarugir"
-    # ];
-    # taps = builtins.attrNames config.nix-homebrew.taps;
+    taps = lib.attrNames config.nix-homebrew.taps;
 
     # `brew install`
-    # TODO: migrate to nix
-    brews = [
-      "dsda-doom"
-      {
-        name = "trash";
-        link = true;
-      }
-    ];
+    brews = [ ];
 
     casks = [
       "detexify"
@@ -32,7 +22,6 @@
       "pearcleaner"
       "qlmarkdown"
       "qlvideo"
-      # "sikarugir-app/sikarugir/sikarugir"
       "steam"
       "transmission-remote-gui"
       "zen"
@@ -45,8 +34,10 @@
       "zoom"
       "yubico-authenticator"
       "visual-studio-code"
-      "stirling-pdf"
+      "stirling-pdf" # https://github.com/NixOS/nixpkgs/pull/480680
       "tunnelblick"
+      "hyperkey"
+      "beeper"
     ];
   };
 }
