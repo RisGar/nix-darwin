@@ -4,7 +4,7 @@
     enable = true;
 
     onActivation = {
-      cleanup = "zap";
+      cleanup = "uninstall";
     };
 
     taps = lib.attrNames config.nix-homebrew.taps;
@@ -13,31 +13,33 @@
     brews = [ ];
 
     casks = [
+      "affinity"
+      "beeper"
+      "boinc"
       "detexify"
       "devonthink"
       "ghostty" # not avaliable on darwin rn
+      "helium-browser"
+      "hyperkey"
       "macs-fan-control"
+      "mole"
       "nordvpn"
       "onyx"
       "pearcleaner"
+      "prusaslicer"
       "qlmarkdown"
       "qlvideo"
-      "steam"
-      "transmission-remote-gui"
-      "zen"
-      "zulip"
       "spotify" # breaks often on nix
-      "helium-browser"
-      "xquartz" # TODO: make ssh -X via nix work
-      "affinity"
-      "prusaslicer"
-      "zoom"
-      "yubico-authenticator"
-      "visual-studio-code"
+      "steam"
       "stirling-pdf" # https://github.com/NixOS/nixpkgs/pull/480680
+      "transmission-remote-gui"
       "tunnelblick"
-      "hyperkey"
-      "beeper"
+      "visual-studio-code"
+      "xquartz" # TODO: make ssh -X via nix work
+      "yubico-authenticator"
+      "zen"
+      "zoom"
+      "zulip"
     ];
   };
 }
