@@ -2,7 +2,7 @@
   pkgs,
   lib,
   config,
-  nix-openclaw,
+  # nix-openclaw,
   ...
 }:
 {
@@ -24,8 +24,8 @@
     vars = lib.mkOption { };
   };
 
+  # nixos-anywhere --flake .#homelab --generate-hardware-config nixos-generate-config ./hosts/homelab/hardware-configuration.nix <hostname>
   config = {
-    # nixos-anywhere --flake .#homelab --generate-hardware-config nixos-generate-config ./hosts/homelab/hardware-configuration.nix <hostname>
 
     services.qemuGuest.enable = true;
 
@@ -169,42 +169,42 @@
       };
     };
 
-    services.openclaw-gateway = {
-      enable = true;
-      package = nix-openclaw.packages.${pkgs.stdenv.hostPlatform.system}.openclaw-gateway;
-
-      config = {
-        gateway = {
-          mode = "local";
-          auth = {
-            token = "\${OPENCLAW_GATEWAY_TOKEN}";
-          };
-        };
-
-        agents = {
-          defaults = {
-            model = {
-              primary = "openrouter/anthropic/claude-sonnet-4-6";
-            };
-          };
-        };
-
-        channels.telegram = {
-          botToken = "\${TELEGRAM_BOT_TOKEN}";
-          allowFrom = [ "tg:7745517638" ];
-          groups = {
-            "*" = {
-              requireMention = true;
-            };
-          };
-        };
-      };
-
-      environmentFiles = [
-        config.age.secrets.openclaw.path
-        config.age.secrets.openrouter.path
-      ];
-    };
+    # services.openclaw-gateway = {
+    #   enable = true;
+    #   package = nix-openclaw.packages.${pkgs.stdenv.hostPlatform.system}.openclaw-gateway;
+    #
+    #   config = {
+    #     gateway = {
+    #       mode = "local";
+    #       auth = {
+    #         token = "\${OPENCLAW_GATEWAY_TOKEN}";
+    #       };
+    #     };
+    #
+    #     agents = {
+    #       defaults = {
+    #         model = {
+    #           primary = "openrouter/anthropic/claude-sonnet-4-6";
+    #         };
+    #       };
+    #     };
+    #
+    #     channels.telegram = {
+    #       botToken = "\${TELEGRAM_BOT_TOKEN}";
+    #       allowFrom = [ "tg:7745517638" ];
+    #       groups = {
+    #         "*" = {
+    #           requireMention = true;
+    #         };
+    #       };
+    #     };
+    #   };
+    #
+    #   environmentFiles = [
+    #     config.age.secrets.openclaw.path
+    #     config.age.secrets.openrouter.path
+    #   ];
+    # };
 
     # services.karakeep = {
     #   enable = true;
