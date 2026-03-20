@@ -1,13 +1,21 @@
 {
+  config,
   ...
 }:
 {
+
+  home.file.".strongbox/agent.sock".source = config.lib.file.mkOutOfStoreSymlink (
+    config.home.homeDirectory + "/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock"
+  );
+
+  home.sessionVariables."SSH_AUTH_SOCK" = config.home.homeDirectory + "/.strongbox/agent.sock";
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
     matchBlocks = {
       "*" = {
-        identityAgent = "\"~/Library/Group Containers/group.strongbox.mac.mcguill/agent.sock\"";
+        identityAgent = config.home.homeDirectory + "/.strongbox/agent.sock";
       };
 
       # TODO

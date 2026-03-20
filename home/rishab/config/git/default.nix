@@ -14,14 +14,17 @@ let
     } "remarshal -if yaml -i \"${p}\" -of json -o \"$out\"";
 in
 {
+  home.file.".ssh/git_allowed_signers".text =
+    "mail@rishab-garg.de ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmBZ3bwIN+dktLVqVRq8DxFuz8Obm0dEt3wr1+ahTHQ mail@rishab-garg.de";
+
   programs.git = {
     enable = true;
 
     signing = {
-      key = "9ADCCDF12AEBD8B8";
       signByDefault = true;
-      format = "openpgp";
-      signer = lib.getExe config.programs.gpg.package;
+      format = "ssh";
+      # key = "9ADCCDF12AEBD8B8"; # PGP
+      key = "key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmBZ3bwIN+dktLVqVRq8DxFuz8Obm0dEt3wr1+ahTHQ";
     };
 
     lfs.enable = true;
@@ -32,7 +35,9 @@ in
         email = "mail@rishab-garg.de";
       };
 
-      gpg.program = lib.getExe config.programs.gpg.package;
+      gpg.ssh = {
+        allowedSignersFile = " ~/.ssh/git_allowed_signers";
+      };
 
       core = {
         editor = "nvim";
