@@ -2,25 +2,89 @@
   lib,
   pkgs,
   self,
+  agenix,
+  nixln-edit,
+  mlpreview,
   ...
 }:
+let
+  homebrew-zathura = pkgs.fetchFromGitHub {
+    owner = "homebrew-zathura";
+    repo = "homebrew-zathura";
+    rev = "b0acc88874ef9dcb5d2ec629965069a8acbd3c9b";
+    hash = "sha256-pE8d1idBFfBT5hsnOO/WN9BLC4FErDc/TsiSDGAvB/E=";
+  };
+in
 {
   imports = [
     ./brew.nix
   ];
 
   nix = {
-    settings = {
-      trusted-users = [
-        "rishab"
-      ];
-    };
+    settings.trusted-users = [ "rishab" ];
+    linux-builder.enable = false;
+    optimise.automatic = true;
+    gc.automatic = true;
   };
 
-  nix.linux-builder.enable = false;
+  nixpkgs.config = {
+    allowBroken = true;
+    allowUnfree = true;
+  };
+
+  nixpkgs.hostPlatform = "aarch64-darwin";
+
+  nixpkgs.overlays = [
+    agenix.overlays.default
+    mlpreview.overlays.default
+
+    (final: prev: {
+      thaw = prev.callPackage ../../pkgs/thaw.nix { };
+
+      whatsapp-for-mac = prev.whatsapp-for-mac.overrideAttrs (old: rec {
+        version = "2.26.9.21";
+        src = prev.fetchzip {
+          extension = "zip";
+          name = "WhatsApp.app";
+          url = "https://web.whatsapp.com/desktop/mac_native/release/?version=${version}&extension=zip&configuration=Release&branch=master";
+          hash = "sha256-Ky0UFxJLFKWWKxdi1zJZd28mFsdl37Hg8qCSW0WDkjY=";
+        };
+      });
+
+      nixln-edit = prev.callPackage nixln-edit { };
+
+      zathuraPackages = prev.zathuraPackages // {
+        zathura_core = prev.zathuraPkgs.zathura_core.overrideAttrs (old: {
+          patches = old.patches ++ [
+            (homebrew-zathura + "/patches/mac-integration.diff")
+            (homebrew-zathura + "/patches/no-titlebar.diff")
+          ];
+        });
+      };
+
+      # https://github.com/NixOS/nixpkgs/issues/484618
+      # vesktop = prev.vesktop.overrideAttrs (old: {
+      #   buildPhase = ''
+      #     runHook preBuild
+      #
+      #     pnpm build
+      #     pnpm exec electron-builder \
+      #       --dir \
+      #       -c.asarUnpack="**/*.node" \
+      #       -c.electronDist=. \
+      #       -c.electronVersion=${prev.electron.version} \
+      #       -c.mac.identity=null
+      #
+      #     runHook postBuild
+      #   '';
+      # });
+
+    })
+
+  ];
 
   services.virby = {
-    enable = true;
+    enable = false;
     cores = 4;
     onDemand = {
       enable = true;
@@ -127,25 +191,7 @@
     LaunchServices.LSQuarantine = true; # TODO: do i need quarantine
   };
 
-  # nixpkgs.pkgs = import <nixpkgs> {
-  #   system = "aarch64-darwin";
-  #   config = {
-  #     allowUnfree = true;
-  #     allowBroken = true;
-  #   };
-  # };
-
-  nixpkgs.config = {
-    allowBroken = true;
-    allowUnfree = true;
-  };
-  nixpkgs.hostPlatform = "aarch64-darwin";
-  nixpkgs.overlays = [ ];
-
   time.timeZone = "Europe/Berlin";
-
-  nix.optimise.automatic = true;
-  nix.gc.automatic = true;
 
   services.dnscrypt-proxy = {
     enable = true;

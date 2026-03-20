@@ -12,8 +12,9 @@
     jdk25
   ];
 
-  home.activation = lib.listToAttrs (
-    lib.map (
+  home.activation =
+    lib.listToAttrs
+    <| lib.map (
       jdk:
       lib.nameValuePair "java-${lib.versions.major jdk.version}" (
         lib.hm.dag.entryAfter [ "writeBoundary" ] (
@@ -26,8 +27,8 @@
           ]
         )
       )
-    ) config.vars.jdks
-  );
+    )
+    <| config.vars.jdks;
 
   home.sessionVariables = {
     JAVA_HOME = "$(/usr/libexec/java_home)";

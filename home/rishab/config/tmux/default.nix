@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -73,7 +74,7 @@ in
     enableTmuxIntegration = false; # TODO: custom prompt with nerd font instead of emojis via overlay
     settings = {
       default_session = {
-        preview_command = "${lib.getExe config.vars.mlpreview} {}";
+        preview_command = "${lib.getExe pkgs.mlpreview}";
         startup_command = "${config.home.sessionVariables.EDITOR} -c ':lua Snacks.picker.files(opts)'";
       };
 
@@ -86,6 +87,10 @@ in
           name = "Notes 󰎞 ";
           path = "${config.home.homeDirectory}/Documents/Notes";
 
+        }
+        {
+          name = "University  ";
+          path = "${config.home.homeDirectory}/Library/Mobile Documents/iCloud~md~obsidian/Documents/University";
         }
         {
           name = "Second Brain  ";

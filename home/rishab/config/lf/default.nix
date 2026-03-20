@@ -1,6 +1,6 @@
 {
-  config,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -8,7 +8,7 @@
   programs.lf = {
     enable = true;
     previewer = {
-      source = lib.getExe config.vars.mlpreview;
+      source = lib.getExe pkgs.mlpreview;
       keybinding = "i"; # TODO: override less with pager in overlay
     };
     extraConfig = builtins.readFile ./lfrc;

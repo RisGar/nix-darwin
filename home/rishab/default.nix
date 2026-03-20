@@ -3,32 +3,13 @@
   config,
   direnv-instant,
   lib,
-  mlpreview,
   nix-colors,
-  nixln-edit,
   nvim-config,
   ocrtool-mcp,
   pkgs,
   secrets,
   ...
 }:
-let
-  thaw = pkgs.callPackage ../../pkgs/thaw.nix { };
-  whatsapp = (
-    pkgs.whatsapp-for-mac.overrideAttrs (
-      final: prev: {
-        version = "2.26.7.19";
-        src = pkgs.fetchzip {
-          extension = "zip";
-          name = "WhatsApp.app";
-          url = "https://web.whatsapp.com/desktop/mac_native/release/?version=${final.version}&extension=zip&configuration=Release&branch=master";
-          hash = "sha256-czWO+Z0HQt1vdMlGLnBq7hDh/qNXFwRAqABYfyqsQWc=";
-        };
-      }
-    )
-  );
-
-in
 {
   imports = [
     agenix.homeManagerModules.default
@@ -85,24 +66,20 @@ in
     colorScheme = nix-colors.colorSchemes.onedark;
 
     vars.systemFlake = "/private/etc/nix-darwin";
-    vars.mlpreview = mlpreview.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    vars.agenix = agenix.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    vars.nixln-edit = nixln-edit.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     home.packages =
       with pkgs;
       [
+        cinny-desktop
         # pcre2 # TODO: remove?
-        # zulip-term # TODO: broken
+        agenix
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
         bear
         captive-browser
-        cinny-desktop
         clipboard-jh
-        config.vars.agenix
-        config.vars.mlpreview
+        csvlens
         doomrunner
         ffmpeg
         git-credential-manager
@@ -121,6 +98,7 @@ in
         luarocks
         man-pages
         man-pages-posix
+        mlpreview
         moonlight-qt
         mosh
         nix-tree
@@ -149,10 +127,11 @@ in
         unison-ucm
         virt-viewer
         wakatime-cli
-        whatsapp
+        whatsapp-for-mac
         xdg-ninja
         xz
         zotero
+        zulip-term # TODO: broken
       ]
       ++
         # Fonts
@@ -208,7 +187,7 @@ in
     programs.starship = {
       enable = true;
       enableTransience = true;
-      settings = builtins.fromTOML (builtins.readFile ./config/starship/starship.toml);
+      settings = fromTOML (builtins.readFile ./config/starship/starship.toml);
     };
 
     programs.direnv = {
@@ -246,23 +225,6 @@ in
 
     programs.vesktop = {
       enable = true;
-      # https://github.com/NixOS/nixpkgs/issues/484618
-      package = pkgs.vesktop.overrideAttrs (old: {
-        buildPhase = ''
-          runHook preBuild
-
-          pnpm build
-          pnpm exec electron-builder \
-            --dir \
-            -c.asarUnpack="**/*.node" \
-            -c.electronDist=. \
-            -c.electronVersion=${pkgs.electron.version} \
-            -c.mac.identity=null
-
-          runHook postBuild
-        '';
-      });
-
     };
 
     programs.man = {
@@ -291,6 +253,11 @@ in
         ocrtool = {
           command = lib.getExe ocrtool-mcp.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
+        things = {
+          command = lib.getExe' config.programs.uv.package "uvx";
+          args = [ "things-mcp" ];
+        };
+
       };
     };
 

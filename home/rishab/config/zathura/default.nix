@@ -89,21 +89,6 @@
 
       render-loading = false;
     };
-    package = pkgs.zathura.override {
-      useMupdf = true;
-      zathura_core = pkgs.zathuraPkgs.zathura_core.overrideAttrs (previousAttrs: {
-        patches = (previousAttrs.patches or [ ]) ++ [
-          (
-            pkgs.fetchFromGitHub {
-              owner = "homebrew-zathura";
-              repo = "homebrew-zathura";
-              rev = "d199fece0240d0439494cf141b7c9d1c785ac784";
-              hash = "sha256-pE8d1idBFfBT5hsnOO/WN9BLC4FErDc/TsiSDGAvB/E=";
-            }
-            + "/patches/mac-integration.diff"
-          )
-        ];
-      });
-    };
+    package = pkgs.zathura.override { useMupdf = true; };
   };
 }
