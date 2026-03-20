@@ -23,7 +23,7 @@
       ...
     }:
     let
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
       secrets = import ./secrets lib;
     in
     {
@@ -49,14 +49,12 @@
 
               extraSpecialArgs = {
                 inherit
-                  secrets
                   agenix
                   direnv-instant
                   nix-colors
-                  nixln-edit
                   nvim-config
-                  mlpreview
                   ocrtool-mcp
+                  secrets
                   ;
               };
             };
@@ -77,7 +75,12 @@
 
         ];
         specialArgs = {
-          inherit self;
+          inherit
+            agenix
+            mlpreview
+            self
+            nixln-edit
+            ;
         };
       };
 
@@ -94,7 +97,7 @@
           }
         ];
         specialArgs = {
-          inherit nix-openclaw;
+          # inherit nix-openclaw;
         };
       };
     };
