@@ -70,6 +70,7 @@
     home.packages =
       with pkgs;
       [
+        mole-mac
         cinny-desktop
         # pcre2 # TODO: remove?
         agenix
@@ -269,6 +270,13 @@
 
     services.ollama = {
       enable = true;
+    };
+
+    programs.nh = {
+      enable = true;
+      clean = {
+        enable = true;
+      };
     };
   };
 }
