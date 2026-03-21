@@ -22,13 +22,12 @@
       "helium-browser"
       "hyperkey"
       "macs-fan-control"
-      "mole"
       "nordvpn"
       "onyx"
       "pearcleaner"
       "prusaslicer"
       "qlmarkdown"
-      "qlvideo"
+      "quicklook-video"
       "spotify" # breaks often on nix
       "steam"
       "stirling-pdf" # https://github.com/NixOS/nixpkgs/pull/480680

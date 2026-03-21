@@ -11,7 +11,7 @@ let
   homebrew-zathura = pkgs.fetchFromGitHub {
     owner = "homebrew-zathura";
     repo = "homebrew-zathura";
-    rev = "b0acc88874ef9dcb5d2ec629965069a8acbd3c9b";
+    rev = "082b515e2f5d3ca88b03d3a9826fe08ed5951cfb";
     hash = "sha256-pE8d1idBFfBT5hsnOO/WN9BLC4FErDc/TsiSDGAvB/E=";
   };
 in
@@ -24,7 +24,6 @@ in
     settings.trusted-users = [ "rishab" ];
     linux-builder.enable = false;
     optimise.automatic = true;
-    gc.automatic = true;
   };
 
   nixpkgs.config = {
@@ -40,14 +39,15 @@ in
 
     (final: prev: {
       thaw = prev.callPackage ../../pkgs/thaw.nix { };
+      mole-mac = prev.callPackage ../../pkgs/mole-mac.nix { };
 
       whatsapp-for-mac = prev.whatsapp-for-mac.overrideAttrs (old: rec {
-        version = "2.26.9.21";
+        version = "2.26.11.21";
         src = prev.fetchzip {
           extension = "zip";
           name = "WhatsApp.app";
           url = "https://web.whatsapp.com/desktop/mac_native/release/?version=${version}&extension=zip&configuration=Release&branch=master";
-          hash = "sha256-Ky0UFxJLFKWWKxdi1zJZd28mFsdl37Hg8qCSW0WDkjY=";
+          hash = "sha256-2/h/rVcNCRP5DVVudIPlISJSn0TV2b2I9HfNu5Zi9UE=";
         };
       });
 
@@ -57,28 +57,9 @@ in
         zathura_core = prev.zathuraPkgs.zathura_core.overrideAttrs (old: {
           patches = old.patches ++ [
             (homebrew-zathura + "/patches/mac-integration.diff")
-            (homebrew-zathura + "/patches/no-titlebar.diff")
           ];
         });
       };
-
-      # https://github.com/NixOS/nixpkgs/issues/484618
-      # vesktop = prev.vesktop.overrideAttrs (old: {
-      #   buildPhase = ''
-      #     runHook preBuild
-      #
-      #     pnpm build
-      #     pnpm exec electron-builder \
-      #       --dir \
-      #       -c.asarUnpack="**/*.node" \
-      #       -c.electronDist=. \
-      #       -c.electronVersion=${prev.electron.version} \
-      #       -c.mac.identity=null
-      #
-      #     runHook postBuild
-      #   '';
-      # });
-
     })
 
   ];
@@ -91,7 +72,6 @@ in
       ttl = 30; # in mins
     };
     rosetta = true;
-    debug = true;
   };
 
   # Set Git commit hash for darwin-version.
