@@ -17,15 +17,14 @@
     <| lib.map (
       jdk:
       lib.nameValuePair "java-${lib.versions.major jdk.version}" (
-        lib.hm.dag.entryAfter [ "writeBoundary" ] (
-          lib.concatStringsSep " " [
-            "run ln -sf $VERBOSE_ARG"
-            (
-              jdk.outPath + "/Library/Java/JavaVirtualMachines/zulu-" + (lib.versions.major jdk.version) + ".jdk/"
-            )
-            ("/Library/Java/JavaVirtualMachines/zulu-" + (lib.versions.major jdk.version) + ".jdk/")
-          ]
-        )
+        lib.hm.dag.entryAfter [ "writeBoundary" ] (''
+          target_root="/Library/Java/JavaVirtualMachines"
+          run mkdir -p "$target_root"
+
+          run ln -sfn $VERBOSE_ARG \
+            "${jdk.outPath}/Library/Java/JavaVirtualMachines/zulu-${lib.versions.major jdk.version}.jdk" \
+          "$target_root/zulu-${lib.versions.major jdk.version}.jdk"
+        '')
       )
     )
     <| config.vars.jdks;
