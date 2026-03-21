@@ -23,7 +23,7 @@ in
     ".." = "z ..";
 
     nixrepl = "nix repl --expr '{inherit (import <nixpkgs> {}) pkgs lib;}'";
-    flakerepl = "nix repl --expr 'builtins.getFlake \"${config.vars.systemFlake}\"'";
+    nixtree = "nix-tree --derivation \"${config.vars.systemFlake}#darwinConfigurations.Rishabs-MacBook-Pro.config.system.build.toplevel\"";
 
     spotify-dlp = "yt-dlp --config-locations ~/.config/yt-dlp/config-spotify";
 
@@ -258,5 +258,4 @@ in
       }
     ];
   };
-
 }
