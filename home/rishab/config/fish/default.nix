@@ -86,9 +86,6 @@ in
     CXX = lib.getExe pkgs.llvmPackages_latest.clang + "++";
 
     WAYLAND_DISPLAY = "wayland-0";
-
-    CONTEXT7_API_KEY = "$(cat \"${config.age.secrets.context7.path}\")";
-    TAVILY_API_KEY = "$(cat \"${config.age.secrets.tavily.path}\")";
   };
 
   home.sessionSearchVariables = {
@@ -114,7 +111,9 @@ in
     generateCompletions = true;
 
     shellInit = ''
-      # fzf
+      set -gx CONTEXT7_API_KEY (string trim (cat ${config.age.secrets.context7.path}))
+      set -gx TAVILY_API_KEY (string trim (cat ${config.age.secrets.tavily.path}))
+
       set fzf_preview_dir_cmd ${lib.getExe config.programs.eza.package} --all --color=always
       set fzf_fd_opts --hidden --exclude=.git
 
