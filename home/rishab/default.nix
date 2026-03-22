@@ -73,7 +73,7 @@
         mole-mac
         cinny-desktop
         # pcre2 # TODO: remove?
-        agenix
+        pkgs.agenix
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
