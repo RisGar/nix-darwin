@@ -29,8 +29,12 @@ in
 
       set -g history-limit 50000
       set -g focus-events on
-      set -gq allow-passthrough all
       set -g detach-on-destroy off  # don't exit from tmux when closing a session
+
+      # Image passthrough
+      set -gq allow-passthrough all
+      set -ga update-environment TERM
+      set -ga update-environment TERM_PROGRAM
 
       set -g clock-mode-style 24
 

@@ -53,6 +53,33 @@ in
 
       nixln-edit = prev.callPackage nixln-edit { };
 
+      yaziPlugins = prev.yaziPlugins // {
+        system-clipboard = prev.callPackage (
+          {
+            fetchFromGitHub,
+          }:
+          prev.yaziPlugins.mkYaziPlugin {
+            pname = "system-clipboard.yazi";
+            version = "0-unstable-2026-03-29";
+
+            installPhase = ''
+              runHook preInstall
+
+              cp -r . $out
+
+              runHook postInstall
+            '';
+
+            src = fetchFromGitHub {
+              owner = "orhnk";
+              repo = "system-clipboard.yazi";
+              rev = "75a53300bed1946c6d488d42efc34864ea26ca85";
+              hash = "sha256-djvSPRHjP9bc4eXTiHwty4byVgVFRBDvfNYlX/nHVaw=";
+            };
+          }
+        ) { };
+      };
+
       zathuraPackages = prev.zathuraPackages // {
         zathura_core = prev.zathuraPkgs.zathura_core.overrideAttrs (old: {
           patches = old.patches ++ [

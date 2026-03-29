@@ -29,6 +29,7 @@
     ./config/nvim
     ./config/ssh
     ./config/tmux
+    ./config/yazi
     ./config/zathura
   ];
 
