@@ -41,6 +41,14 @@ in
       thaw = prev.callPackage ../../pkgs/thaw.nix { };
       mole-mac = prev.callPackage ../../pkgs/mole-mac.nix { };
 
+      github-copilot-cli = prev.github-copilot-cli.overrideAttrs (old: rec {
+        version = "1.0.10";
+        src = prev.fetchurl {
+          url = "https://github.com/github/copilot-cli/releases/download/v${version}/copilot-darwin-arm64.tar.gz";
+          hash = "sha256-kg76xm3UPXJZ8ibz62rLXjgGIGnpaTO06LCcPltPlhc=";
+        };
+      });
+
       whatsapp-for-mac = prev.whatsapp-for-mac.overrideAttrs (old: rec {
         version = "2.26.11.21";
         src = prev.fetchzip {
