@@ -237,6 +237,7 @@
     gtk = {
       enable = true;
       colorScheme = "dark";
+      gtk4.theme = config.gtk.theme;
     };
 
     xdg.configFile."ghostty/config".text = builtins.readFile ./config/ghostty/config;
