@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 {
   programs.zathura = {
     enable = true;
@@ -89,6 +93,11 @@
 
       render-loading = false;
     };
-    package = pkgs.zathura.override { useMupdf = true; };
+  };
+
+  home.activation = {
+    zathura = lib.hm.dag.entryAfter [
+      "writeBoundary"
+    ] "run ${config.vars.systemFlake}/home/rishab/config/zathura/convert-into-app.sh $VERBOSE_ARG";
   };
 }

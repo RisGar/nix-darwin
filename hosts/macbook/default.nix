@@ -7,14 +7,6 @@
   mlpreview,
   ...
 }:
-let
-  homebrew-zathura = pkgs.fetchFromGitHub {
-    owner = "homebrew-zathura";
-    repo = "homebrew-zathura";
-    rev = "082b515e2f5d3ca88b03d3a9826fe08ed5951cfb";
-    hash = "sha256-pE8d1idBFfBT5hsnOO/WN9BLC4FErDc/TsiSDGAvB/E=";
-  };
-in
 {
   imports = [
     ./brew.nix
@@ -88,13 +80,27 @@ in
         ) { };
       };
 
-      zathuraPackages = prev.zathuraPackages // {
-        zathura_core = prev.zathuraPkgs.zathura_core.overrideAttrs (old: {
-          patches = old.patches ++ [
-            (homebrew-zathura + "/patches/mac-integration.diff")
-          ];
-        });
-      };
+      zathuraPkgs = prev.zathuraPkgs.overrideScope (
+        zfinal: zprev: {
+          zathura_core = zprev.zathura_core.overrideAttrs (
+            old:
+            let
+              homebrew-zathura = prev.fetchFromGitHub {
+                owner = "homebrew-zathura";
+                repo = "homebrew-zathura";
+                rev = "7e256f501f6aa733dc2afb9af2ebecdbb36cafc9";
+                hash = "sha256-lVGXxB5IKy7reMMLIVtDZVSnVKtKQ35xLqhCdOEKcxs=";
+              };
+            in
+            {
+              patches = [
+                (homebrew-zathura + "/patches/mac-integration.diff")
+                (homebrew-zathura + "/patches/no-titlebar.diff")
+              ];
+            }
+          );
+        }
+      );
     })
 
   ];
