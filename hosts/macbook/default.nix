@@ -30,6 +30,7 @@
     mlpreview.overlays.default
 
     (final: prev: {
+      clippy-mac = prev.callPackage ../../pkgs/clippy-mac.nix { };
       thaw = prev.callPackage ../../pkgs/thaw.nix { };
       mole-mac = prev.callPackage ../../pkgs/mole-mac.nix { };
 
@@ -54,13 +55,13 @@
       nixln-edit = prev.callPackage nixln-edit { };
 
       yaziPlugins = prev.yaziPlugins // {
-        system-clipboard = prev.callPackage (
+        clippy = prev.callPackage (
           {
             fetchFromGitHub,
           }:
           prev.yaziPlugins.mkYaziPlugin {
-            pname = "system-clipboard.yazi";
-            version = "0-unstable-2026-03-29";
+            pname = "clippy.yazi";
+            version = "0-unstable-2025-08-25";
 
             installPhase = ''
               runHook preInstall
@@ -71,10 +72,16 @@
             '';
 
             src = fetchFromGitHub {
-              owner = "orhnk";
-              repo = "system-clipboard.yazi";
-              rev = "75a53300bed1946c6d488d42efc34864ea26ca85";
+              owner = "Gallardo994";
+              repo = "clippy.yazi";
+              rev = "8ce55413976ebd1922dbc4fc27ced9776823df54";
               hash = "sha256-djvSPRHjP9bc4eXTiHwty4byVgVFRBDvfNYlX/nHVaw=";
+            };
+
+            meta = {
+              description = "Clippy integration for Yazi file manager ";
+              homepage = "https://github.com/Gallardo994/clippy.yazi";
+              license = lib.licenses.mit;
             };
           }
         ) { };

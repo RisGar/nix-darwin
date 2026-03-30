@@ -9,13 +9,16 @@
     keymap = {
       mgr.prepend_keymap = [
         {
-          run = "plugin system-clipboard";
-          on = "<C-y>";
+          on = [ "y" ];
+          run = [
+            "yank"
+            "plugin clippy"
+          ];
         }
       ];
     };
     plugins = {
-      inherit (pkgs.yaziPlugins) system-clipboard;
+      inherit (pkgs.yaziPlugins) clippy;
     };
   };
 }

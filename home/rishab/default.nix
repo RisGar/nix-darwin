@@ -81,6 +81,7 @@
         bear
         captive-browser
         clipboard-jh
+        clippy-mac
         csvlens
         doomrunner
         ffmpeg
