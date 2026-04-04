@@ -5,7 +5,6 @@
   lib,
   nix-colors,
   nvim-config,
-  ocrtool-mcp,
   pkgs,
   secrets,
   ...
@@ -17,6 +16,7 @@
     nvim-config.homeModules.default
     direnv-instant.homeModules.direnv-instant
 
+    ./config/opencode
     ./config/aerospace
     ./config/captive-browser # TODO: replace with dnscypt proxy forwarding of firefox default captive portal getter site
     ./config/eza
@@ -71,6 +71,7 @@
     home.packages =
       with pkgs;
       [
+        bun
         mole-mac
         cinny-desktop
         # pcre2 # TODO: remove?
@@ -241,39 +242,6 @@
     };
 
     xdg.configFile."ghostty/config".text = builtins.readFile ./config/ghostty/config;
-
-    programs.mcp = {
-      enable = true;
-      servers = {
-        context7 = {
-          url = "https://mcp.context7.com/mcp";
-          headers = {
-            CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
-          };
-        };
-        tavily = {
-          url = "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}";
-        };
-        ocrtool = {
-          command = lib.getExe ocrtool-mcp.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        };
-        things = {
-          command = lib.getExe' config.programs.uv.package "uvx";
-          args = [ "things-mcp" ];
-        };
-
-      };
-    };
-
-    programs.opencode = {
-      enable = true;
-      enableMcpIntegration = true;
-      settings = builtins.fromJSON <| builtins.readFile ./config/opencode/opencode.json;
-    };
-
-    services.ollama = {
-      enable = true;
-    };
 
     programs.nh = {
       enable = true;
