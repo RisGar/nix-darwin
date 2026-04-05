@@ -13,6 +13,7 @@
       nix-colors,
       nix-darwin,
       nix-homebrew,
+      nix-index-database,
       nixln-edit,
       nixpkgs,
       nvim-config,
@@ -52,6 +53,7 @@
                   agenix
                   direnv-instant
                   nix-colors
+                  nix-index-database
                   nvim-config
                   ocrtool-mcp
                   secrets
@@ -160,6 +162,10 @@
     };
     ocrtool-mcp = {
       url = "github:RisGar/ocrtool-mcp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

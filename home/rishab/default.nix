@@ -25,7 +25,6 @@
     ./config/fzf
     ./config/git
     ./config/java
-    ./config/lf
     ./config/nvim
     ./config/ssh
     ./config/tmux

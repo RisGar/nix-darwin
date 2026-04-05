@@ -168,11 +168,6 @@ in
       #   '';
       # };
 
-      lf = {
-        wraps = "lf";
-        description = "lf wrapped with cd";
-        body = "cd \"$(${lib.getExe config.programs.lf.package} -print-last-dir $argv)\"";
-      };
 
       # fd = {
       #   wraps = "fd";
