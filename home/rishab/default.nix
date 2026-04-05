@@ -77,15 +77,12 @@
         bun
         mole-mac
         cinny-desktop
-        # pcre2 # TODO: remove?
         pkgs.agenix
         airdrop-cli
         babelfish
         beam.interpreters.erlang_28 # for gleescript
         bear
         captive-browser
-        clipboard-jh
-        clippy-mac
         csvlens
         doomrunner
         ffmpeg
@@ -138,7 +135,6 @@
         xdg-ninja
         xz
         zotero
-        zulip-term # TODO: broken
       ]
       ++
         # Fonts
