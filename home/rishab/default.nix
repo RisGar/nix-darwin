@@ -4,6 +4,7 @@
   direnv-instant,
   lib,
   nix-colors,
+  nix-index-database,
   nvim-config,
   pkgs,
   secrets,
@@ -13,6 +14,7 @@
   imports = [
     agenix.homeManagerModules.default
     nix-colors.homeManagerModules.default
+    nix-index-database.homeModules.default
     nvim-config.homeModules.default
     direnv-instant.homeModules.direnv-instant
 
@@ -199,6 +201,7 @@
       enable = true;
       nix-direnv.enable = true;
     };
+
     # TODO:
     # programs.direnv-instant = {
     #   enable = true;
