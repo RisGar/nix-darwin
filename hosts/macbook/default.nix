@@ -33,11 +33,12 @@
       clippy-mac = prev.callPackage ../../pkgs/clippy-mac.nix { };
       thaw = prev.callPackage ../../pkgs/thaw.nix { };
       mole-mac = prev.callPackage ../../pkgs/mole-mac.nix { };
+      lumaglass = prev.callPackage ../../pkgs/lumaglass.nix { }; # TODO
 
       github-copilot-cli = prev.github-copilot-cli.overrideAttrs (old: rec {
         version = "1.0.10";
         src = prev.fetchurl {
-          url = "https://github.com/github/copilot-cli/releases/download/v${version}/copilot-darwin-arm64.tar.gz";
+         url = "https://github.com/github/copilot-cli/releases/download/v${version}/copilot-darwin-arm64.tar.gz";
           hash = "sha256-kg76xm3UPXJZ8ibz62rLXjgGIGnpaTO06LCcPltPlhc=";
         };
       });

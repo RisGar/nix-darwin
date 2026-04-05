@@ -9,9 +9,6 @@
 
     taps = lib.attrNames config.nix-homebrew.taps;
 
-    # `brew install`
-    brews = [ ];
-
     casks = [
       "affinity"
       "beeper"

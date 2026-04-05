@@ -71,6 +71,8 @@
     home.packages =
       with pkgs;
       [
+        # lumaglass
+        monitorcontrol
         bun
         mole-mac
         cinny-desktop
