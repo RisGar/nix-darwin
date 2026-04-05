@@ -12,12 +12,6 @@
     ./brew.nix
   ];
 
-  nix = {
-    settings.trusted-users = [ "rishab" ];
-    linux-builder.enable = false;
-    optimise.automatic = true;
-  };
-
   nixpkgs.config = {
     allowBroken = true;
     allowUnfree = true;
@@ -38,7 +32,7 @@
       github-copilot-cli = prev.github-copilot-cli.overrideAttrs (old: rec {
         version = "1.0.10";
         src = prev.fetchurl {
-         url = "https://github.com/github/copilot-cli/releases/download/v${version}/copilot-darwin-arm64.tar.gz";
+          url = "https://github.com/github/copilot-cli/releases/download/v${version}/copilot-darwin-arm64.tar.gz";
           hash = "sha256-kg76xm3UPXJZ8ibz62rLXjgGIGnpaTO06LCcPltPlhc=";
         };
       });
@@ -126,12 +120,23 @@
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
 
+  nix = {
+    linux-builder.enable = false;
+    optimise.automatic = true;
+  };
+
   # Necessary for using flakes on this system.
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-    "pipe-operators"
-  ];
+  nix.settings = {
+    trusted-users = [ "rishab" ];
+
+    experimental-features = [
+      "nix-command"
+      "flakes"
+      "pipe-operators"
+    ];
+
+    download-buffer-size = 536870912; # 512 MiB
+  };
 
   nix.channel.enable = false;
 
