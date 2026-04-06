@@ -28,6 +28,7 @@
       "spotify" # breaks often on nix
       "steam"
       "stirling-pdf" # https://github.com/NixOS/nixpkgs/pull/480680
+      "telegram" # nixpkgs only has telegram-desktop, not telegram-swift
       "transmission-remote-gui"
       "tunnelblick"
       "visual-studio-code"
