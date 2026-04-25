@@ -67,6 +67,11 @@
         hostname = "85.215.138.48";
         user = "root";
       };
+
+      "psa" = {
+        hostname = "psa.in.tum.de";
+        user = "go57siq";
+      };
     };
   };
 }
