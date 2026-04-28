@@ -72,6 +72,12 @@
         hostname = "psa.in.tum.de";
         user = "go57siq";
       };
+
+      "grnvs" = {
+        hostname = "testbed.grnvs.net.cit.tum.de";
+        user = "u64829";
+        port = "10022";
+      };
     };
   };
 }
