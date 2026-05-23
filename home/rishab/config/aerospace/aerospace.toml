@@ -156,12 +156,12 @@ cmd-ctrl-alt-shift-w = [
 ]
 # Obsidian (Docs)
 cmd-ctrl-alt-shift-d = [
-  "exec-and-forget open '~/Applications/Home Manager Apps/Obsidian.app'",
+  "exec-and-forget open $HOME'/Applications/Home Manager Apps/Obsidian.app'",
   "workspace d",
 ]
 # Logseq (Content)
 cmd-ctrl-alt-shift-c = [
-  "exec-and-forget open '~/Applications/Home Manager Apps/Logseq.app'",
+  "exec-and-forget open $HOME'/Applications/Home Manager Apps/Logseq.app'",
   "workspace c",
 ]
 
