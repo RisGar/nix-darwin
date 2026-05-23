@@ -10,7 +10,6 @@
       disko,
       home-manager,
       mlpreview,
-      nix-colors,
       nix-darwin,
       nix-homebrew,
       nix-index-database,
@@ -21,6 +20,7 @@
       virby,
       nix-openclaw,
       ocrtool-mcp,
+      stylix,
       ...
     }:
     let
@@ -40,6 +40,9 @@
           ./hosts/macbook
 
           {
+            nix.registry.nixpkgs.flake = nixpkgs; # Pin flake so nix3 commands use system nixpkgs
+            nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; # pin nix path so nix2 commands use system nixpkgs
+
             age.secrets = secrets;
 
             home-manager = {
@@ -50,11 +53,10 @@
 
               extraSpecialArgs = {
                 inherit
+                  stylix
                   agenix
                   direnv-instant
-                  nix-colors
                   nix-index-database
-                  nvim-config
                   ocrtool-mcp
                   secrets
                   ;
@@ -82,6 +84,7 @@
             mlpreview
             self
             nixln-edit
+            nvim-config
             ;
         };
       };
@@ -135,12 +138,8 @@
       url = "github:RisGar/base16-schemes";
       flake = false;
     };
-    nix-colors = {
-      url = "github:misterio77/nix-colors";
-      inputs.base16-schemes.follows = "base16-schemes";
-    };
     virby = {
-      url = "github:quinneden/virby-nix-darwin/be170bd7ef21ce9773e7daa646d43f5405a1bdb2";
+      url = "github:quinneden/virby-nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
@@ -177,6 +176,10 @@
     homebrew-cask = {
       url = "github:homebrew/homebrew-cask";
       flake = false;
+    };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }
