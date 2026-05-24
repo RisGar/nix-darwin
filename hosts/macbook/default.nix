@@ -1,10 +1,11 @@
 {
+  agenix,
   lib,
+  mlpreview,
+  nixln-edit,
+  nvim-config,
   pkgs,
   self,
-  agenix,
-  nixln-edit,
-  mlpreview,
   ...
 }:
 {
@@ -28,24 +29,40 @@
       thaw = prev.callPackage ../../pkgs/thaw.nix { };
       mole-mac = prev.callPackage ../../pkgs/mole-mac.nix { };
       lumaglass = prev.callPackage ../../pkgs/lumaglass.nix { }; # TODO
+      dragterm = prev.callPackage ../../pkgs/dragterm.nix { };
 
-      github-copilot-cli = prev.github-copilot-cli.overrideAttrs (old: rec {
-        version = "1.0.10";
-        src = prev.fetchurl {
-          url = "https://github.com/github/copilot-cli/releases/download/v${version}/copilot-darwin-arm64.tar.gz";
-          hash = "sha256-kg76xm3UPXJZ8ibz62rLXjgGIGnpaTO06LCcPltPlhc=";
-        };
+      inherit (prev.lixPackageSets.stable)
+        nixpkgs-review
+        nix-eval-jobs
+        nix-fast-build
+        colmena
+        ;
+
+      # TODO: remove
+      libfyaml = prev.libfyaml.overrideAttrs (previousAttrs: {
+        postInstall = (previousAttrs.postInstall or "") + ''
+          substituteInPlace "$dev/lib/pkgconfig/libfyaml.pc" \
+            --replace-fail " none required" ""
+        '';
       });
 
       whatsapp-for-mac = prev.whatsapp-for-mac.overrideAttrs (old: rec {
-        version = "2.26.11.21";
+        version = "2.26.17.19";
         src = prev.fetchzip {
           extension = "zip";
           name = "WhatsApp.app";
           url = "https://web.whatsapp.com/desktop/mac_native/release/?version=${version}&extension=zip&configuration=Release&branch=master";
-          hash = "sha256-2/h/rVcNCRP5DVVudIPlISJSn0TV2b2I9HfNu5Zi9UE=";
+          hash = "sha256-/y3JYgNRAK6amRhjCrO1aJi4TzSyW5gHtosf/Qt1+gM=";
         };
       });
+
+      nvim = prev.callPackage nvim-config {
+        jdks = with prev; [
+          jdk17
+          jdk21
+          jdk25
+        ];
+      };
 
       nixln-edit = prev.callPackage nixln-edit { };
 
@@ -70,41 +87,18 @@
               owner = "Gallardo994";
               repo = "clippy.yazi";
               rev = "8ce55413976ebd1922dbc4fc27ced9776823df54";
-              hash = "sha256-djvSPRHjP9bc4eXTiHwty4byVgVFRBDvfNYlX/nHVaw=";
+              hash = "sha256-oB9DkNWvUDbSAPnxtv56frlWWYz5vtu2BJVvWH/Uags=";
             };
 
             meta = {
-              description = "Clippy integration for Yazi file manager ";
+              description = "Clippy integration for Yazi file manager";
               homepage = "https://github.com/Gallardo994/clippy.yazi";
               license = lib.licenses.mit;
             };
           }
         ) { };
       };
-
-      zathuraPkgs = prev.zathuraPkgs.overrideScope (
-        zfinal: zprev: {
-          zathura_core = zprev.zathura_core.overrideAttrs (
-            old:
-            let
-              homebrew-zathura = prev.fetchFromGitHub {
-                owner = "homebrew-zathura";
-                repo = "homebrew-zathura";
-                rev = "7e256f501f6aa733dc2afb9af2ebecdbb36cafc9";
-                hash = "sha256-lVGXxB5IKy7reMMLIVtDZVSnVKtKQ35xLqhCdOEKcxs=";
-              };
-            in
-            {
-              patches = [
-                (homebrew-zathura + "/patches/mac-integration.diff")
-                (homebrew-zathura + "/patches/no-titlebar.diff")
-              ];
-            }
-          );
-        }
-      );
     })
-
   ];
 
   services.virby = {
@@ -112,7 +106,7 @@
     cores = 4;
     onDemand = {
       enable = true;
-      ttl = 30; # in mins
+      ttl = 15; # in mins
     };
     rosetta = true;
   };
@@ -121,7 +115,8 @@
   system.configurationRevision = self.rev or self.dirtyRev or null;
 
   nix = {
-    linux-builder.enable = false;
+    package = pkgs.lixPackageSets.stable.lix;
+    linux-builder.enable = true;
     optimise.automatic = true;
   };
 
@@ -132,10 +127,8 @@
     experimental-features = [
       "nix-command"
       "flakes"
-      "pipe-operators"
+      "pipe-operator"
     ];
-
-    download-buffer-size = 536870912; # 512 MiB
   };
 
   nix.channel.enable = false;
@@ -181,6 +174,52 @@
       expose-group-apps = true;
       launchanim = true;
       mineffect = "scale";
+      orientation = "bottom";
+
+      showDesktopGestureEnabled = true;
+      showLaunchpadGestureEnabled = true;
+
+      persistent-apps = [
+        {
+          app = "/Applications/Zen Browser.app";
+        }
+        {
+          app = "/Applications/Ghostty.app";
+        }
+        {
+          app = "/Applications/Spotify.app";
+        }
+        {
+          app = "${pkgs.whatsapp-for-mac}/Applications/WhatsApp.app";
+        }
+        {
+          app = "${pkgs.obsidian}/Applications/Obsidian.app";
+        }
+        {
+          app = "${pkgs.logseq}/applications/Logseq.app";
+        }
+        {
+          app = "/System/Applications/Mail.app";
+        }
+        {
+          app = "/System/Applications/Calendar.app";
+        }
+        {
+          app = "/Applications/DEVONthink 3.app";
+        }
+        {
+          app = "/Applications/Telegram.app";
+        }
+        {
+          app = "${pkgs.vesktop}/Applications/Vesktop.app";
+        }
+        {
+          app = "${pkgs.cinny-desktop}/Applications/Cinny.app";
+        }
+        {
+          app = "/Applications/Strongbox.app";
+        }
+      ];
     };
 
     hitoolbox.AppleFnUsageType = "Show Emoji & Symbols";
@@ -270,7 +309,6 @@
         privacy_level = 1;
       };
     };
-
   };
 
   launchd.daemons.dnscrypt-proxy.serviceConfig.UserName = lib.mkForce "root";
@@ -285,5 +323,4 @@
       "127.0.0.1"
     ];
   };
-
 }
