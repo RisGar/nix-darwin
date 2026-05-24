@@ -23,7 +23,8 @@ in
       set -g status-position top
       set -g status-justify absolute-centre
       set -g status-style "bg=default"
-      set -g window-status-current-style "fg=blue bold"
+      set -g window-status-style "bg=default"
+      set -g window-status-current-style "fg=blue bold bg=default"
       set -g status-left ""
       set -g status-right "#S"
 
@@ -78,7 +79,6 @@ in
     enableTmuxIntegration = false; # TODO: custom prompt with nerd font instead of emojis via overlay
     settings = {
       default_session = {
-        preview_command = "${lib.getExe pkgs.mlpreview}";
         startup_command = "${config.home.sessionVariables.EDITOR} -c ':lua Snacks.picker.files(opts)'";
       };
 
@@ -86,6 +86,11 @@ in
         {
           name = "Nix 󱄅 ";
           path = config.vars.systemFlake;
+        }
+        {
+          name = "Spotify  ";
+          path = config.home.homeDirectory;
+          startup_command = lib.getExe pkgs.spotify-player;
         }
         {
           name = "Notes 󰎞 ";

@@ -1,23 +1,7 @@
-{
-  config,
-  lib,
-  ...
-}:
+{ ... }:
 {
   programs.fzf = {
     enable = true;
-
-    colors = {
-      "bg+" = "#${config.colorScheme.palette.base01}";
-      spinner = "#${config.colorScheme.palette.base0C}";
-      hl = "#${config.colorScheme.palette.base0D}";
-      header = "#${config.colorScheme.palette.base0D}";
-      info = "#${config.colorScheme.palette.base0A}";
-      pointer = "#${config.colorScheme.palette.base0C}";
-      marker = "#${config.colorScheme.palette.base0C}";
-      prompt = "#${config.colorScheme.palette.base0A}";
-      "hl+" = "#${config.colorScheme.palette.base0D}";
-    };
 
     defaultOptions = [
       "--cycle"

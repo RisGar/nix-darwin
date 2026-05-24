@@ -104,7 +104,6 @@ in
 
   };
 
-  xdg.configFile."fish/themes/One Dark.theme".source = ./one_dark.theme;
   programs.fish = {
     enable = true;
 
@@ -128,9 +127,6 @@ in
 
       # bind -M visual -m default y "fish_clipboard_copy; commandline -f end-selection repaint-mode"
       # bind p forward-char "commandline -i ( pbpaste; echo )[1]" # TODO
-
-      # Theme
-      fish_config theme choose "One Dark"
     '';
 
     # Autostart tmux if enabled

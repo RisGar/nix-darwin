@@ -8,30 +8,29 @@
   nvim-config,
   pkgs,
   secrets,
+  stylix,
   ...
 }:
 {
   imports = [
     agenix.homeManagerModules.default
-    nix-colors.homeManagerModules.default
     nix-index-database.homeModules.default
-    nvim-config.homeModules.default
     direnv-instant.homeModules.direnv-instant
+    stylix.homeModules.stylix
 
-    ./config/opencode
+    ./config/agents
     ./config/aerospace
     ./config/captive-browser # TODO: replace with dnscypt proxy forwarding of firefox default captive portal getter site
-    ./config/eza
     ./config/fastfetch
     ./config/fish
     ./config/fzf
     ./config/git
     ./config/java
-    ./config/nvim
     ./config/ssh
     ./config/tmux
     ./config/yazi
-    ./config/zathura
+    ./config/sioyek
+    ./config/colours
   ];
 
   options = {
@@ -64,8 +63,6 @@
       inherit secrets;
       identityPaths = [ (config.home.homeDirectory + "/.ssh/agenix") ];
     };
-
-    colorScheme = nix-colors.colorSchemes.onedark;
 
     vars.systemFlake = "/private/etc/nix-darwin";
 
@@ -152,13 +149,9 @@
 
     fonts.fontconfig.enable = true;
 
-    xdg.configFile."btop/themes/onedark.theme".text =
-      builtins.readFile "${config.programs.btop.package.outPath}/share/btop/themes/onedark.theme"; # fix themes not working with home-manager symlink
     programs.btop = {
       enable = true;
       settings = {
-        color_theme = "onedark";
-        theme_background = false;
         vim_keys = true;
       };
     };
@@ -178,7 +171,6 @@
     programs.bat = {
       enable = true;
       config = {
-        theme = "TwoDark";
         pager = "${lib.getExe pkgs.ov} -F -H4";
       };
     };
