@@ -56,6 +56,10 @@
 
     initLua = ./init.lua;
     settings = {
+      mgr = {
+        show_hidden = true;
+      };
+
       plugin = {
         prepend_fetchers = [
           {

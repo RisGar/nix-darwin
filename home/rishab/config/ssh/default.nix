@@ -16,6 +16,9 @@
     matchBlocks = {
       "*" = {
         identityAgent = config.home.homeDirectory + "/.strongbox/agent.sock";
+        extraOptions = {
+          StrictHostKeyChecking = "accept-new";
+        };
       };
 
       # TODO
@@ -71,12 +74,14 @@
       "psa" = {
         hostname = "psa.in.tum.de";
         user = "go57siq";
+        forwardX11Trusted = true;
       };
 
       "grnvs" = {
         hostname = "testbed.grnvs.net.cit.tum.de";
         user = "u64829";
-        port = "10022";
+        port = 10022;
+        forwardAgent = true;
       };
     };
   };
