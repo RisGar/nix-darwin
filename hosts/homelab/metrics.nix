@@ -1,5 +1,8 @@
 { config, ... }:
 {
+
+  age.secrets.grafana-oauth.owner = "grafana";
+
   services.grafana = {
     enable = true;
     settings = {
@@ -17,7 +20,7 @@
         allow_sign_up = true;
         # auto_login = true; name = "Pocket ID";
         client_id = "9f9c6b4a-d46a-43ab-9a24-f376a0669a74";
-        client_secret = "sApCPrSDjHXX7IJtD7Z3JDS2WL5KepsA";
+        client_secret = "$__file{${config.age.secrets.grafana-oauth.path}}";
         scopes = "openid profile email groups";
         auth_url = "${config.services.pocket-id.settings.APP_URL}/authorize";
         token_url = "${config.services.pocket-id.settings.APP_URL}/api/oidc/token";
