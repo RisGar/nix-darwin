@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  nvim-config,
   ...
 }:
 let
@@ -43,7 +42,6 @@ in
   ];
 
   home.sessionVariables = {
-    XDG_BIN_HOME = "$HOME/.local/bin";
     XDG_RUNTIME_DIR = "$TMPDIR";
 
     LANG = "en_GB.UTF-8";
@@ -51,9 +49,9 @@ in
     LS_COLORS = "1"; # TODO
 
     # Use neovim as default editor and manpager
-    EDITOR = lib.getExe nvim-config.packages.${pkgs.stdenv.system}.default;
-    VISUAL = lib.getExe nvim-config.packages.${pkgs.stdenv.system}.default;
-    MANPAGER = lib.getExe nvim-config.packages.${pkgs.stdenv.system}.default + " +Man!";
+    EDITOR = lib.getExe pkgs.nvim;
+    VISUAL = lib.getExe pkgs.nvim;
+    MANPAGER = (lib.getExe pkgs.nvim) + " +Man!";
 
     PAGER = lib.getExe pkgs.ov;
 
@@ -151,30 +149,10 @@ in
         '';
       };
 
-      # git_clone_and_cd = {
-      #   description = "Git clones a repo and cds into it";
-      #   body = ''
-      #     git clone $argv[1]
-      #     if test $status -eq 0
-      #       set repo (basename $argv[1] .git)
-      #       z $repo
-      #       z ..
-      #       sesh connect $repo
-      #     end
-      #   '';
-      # };
-
-
-      # fd = {
-      #   wraps = "fd";
-      #   description = "fd with bat";
-      #   body = "${lib.getExe pkgs.fd} $argv -X ${lib.getExe pkgs.bat}";
-      # };
-
       reload = {
         description = "Reloads nix-darwin";
         body = ''
-          sudo -i darwin-rebuild switch -I ${config.vars.systemFlake} $argv
+          sudo -i darwin-rebuild switch -I ${config.vars.systemFlake}#${config.vars.hostname} $argv
           ghostty +validate-config
           tmux source-file ~/.config/tmux/tmux.conf
           source ~/.config/fish/config.fish
@@ -188,6 +166,29 @@ in
           if set TMUX
             tmux clear-history
           end
+        '';
+      };
+
+      nix-sri-hash = {
+        description = "Fetches SRI hash for a remote URL";
+        body = ''
+          set -l prefetch_args --type sha256
+
+          switch "$argv[1]"
+            case -u --unpack
+              set prefetch_args $prefetch_args --unpack
+              set -e argv[1]
+          end
+
+          if test (count $argv) -ne 1
+            echo "Usage: nix-sri-hash [-u|--unpack] <url>" >&2
+            return 1
+          end
+
+          set -l hash (nix-prefetch-url $prefetch_args "$argv[1]")
+          or return $status
+
+          nix hash to-sri --type sha256 "$hash"
         '';
       };
 
@@ -214,7 +215,6 @@ in
       };
 
       # Vi mode
-
       fish_user_key_bindings = {
         body = ''
           fish_default_key_bindings -M insert
