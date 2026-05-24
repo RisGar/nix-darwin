@@ -38,14 +38,6 @@
         colmena
         ;
 
-      # TODO: remove
-      libfyaml = prev.libfyaml.overrideAttrs (previousAttrs: {
-        postInstall = (previousAttrs.postInstall or "") + ''
-          substituteInPlace "$dev/lib/pkgconfig/libfyaml.pc" \
-            --replace-fail " none required" ""
-        '';
-      });
-
       whatsapp-for-mac = prev.whatsapp-for-mac.overrideAttrs (old: rec {
         version = "2.26.17.19";
         src = prev.fetchzip {
