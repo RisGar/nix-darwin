@@ -3,9 +3,7 @@
   config,
   direnv-instant,
   lib,
-  nix-colors,
   nix-index-database,
-  nvim-config,
   pkgs,
   secrets,
   stylix,
@@ -65,14 +63,22 @@
     };
 
     vars.systemFlake = "/private/etc/nix-darwin";
+    vars.hostname = "Rishabs-MacBook-Pro";
 
     home.packages =
       with pkgs;
       [
+        # xquartz
         # lumaglass
+        dragterm
+        signal-desktop
+        nvim
+        # anki
+        pdfarranger
+        nixln-edit
         monitorcontrol
         bun
-        mole-mac
+        # mole-mac
         cinny-desktop
         pkgs.agenix
         airdrop-cli
@@ -109,7 +115,7 @@
         numi
         obsidian # TODO: home manager
         ov
-        papers
+        # papers
         pkgconf
         podman
         podman-compose
@@ -240,6 +246,36 @@
       clean = {
         enable = true;
       };
+    };
+
+    programs.spotify-player = {
+      enable = true;
+      settings = {
+        enable_audio_visualization = true;
+        enable_media_control = true;
+        border_type = "Rounded";
+        enable_mouse_scroll_volume = false;
+        play_icon = " ";
+        pause_icon = " ";
+        liked_icon = " ";
+        device = {
+          audio_cache = true;
+          normalization = true;
+          autoplay = true;
+        };
+      };
+    };
+
+    programs.eza = {
+      enable = true;
+      colors = "always";
+      icons = "always";
+      git = true;
+
+      extraOptions = [
+        "--classify=always"
+        "--group-directories-first"
+      ];
     };
   };
 }
