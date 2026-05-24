@@ -21,6 +21,7 @@ let
     "homarr"
     "cloudflared"
     "openrouter"
+    "openclaw"
   ];
 in
 builtins.listToAttrs
