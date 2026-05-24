@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/likaia/MonitorControl/releases/download/v${version}/LumaGlass-${version}.dmg";
-    hash = "sha256-Ld+Yg2AB/FrGLnPLaI/LWbNkf6NTN5L9N3Ic2cgjI2g=";
+    hash = "sha256-Ld+Yg2/rGLnPLaI/LWbNkf6NTN5L9N3Ic2cgjI2g=";
   };
 
   nativeBuildInputs = [ _7zz ];
