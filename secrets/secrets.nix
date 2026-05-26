@@ -20,6 +20,7 @@ let
     "open-webui"
     "homarr"
     "cloudflared"
+    "grafana-oauth"
     "openrouter"
     "openclaw"
   ];
