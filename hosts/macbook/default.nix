@@ -39,12 +39,12 @@
         ;
 
       whatsapp-for-mac = prev.whatsapp-for-mac.overrideAttrs (old: rec {
-        version = "2.26.21.17";
+        version = "2.26.21.19";
         src = prev.fetchzip {
           extension = "zip";
           name = "WhatsApp.app";
           url = "https://web.whatsapp.com/desktop/mac_native/release/?version=${version}&extension=zip&configuration=Release&branch=master";
-          hash = "sha256-JPUToYx5H/VMhK9UdF6sKz8rKXvI/ZMqkVPbrDDt6PI=";
+          hash = "sha256-ZqJXYCID6MfY+WQU3AQErOc76UCXZHvzgg8+2fwnQcI=";
         };
       });
 
